@@ -52,11 +52,11 @@ function Home() {
           variants={itemVariant}
           className="w-full lg:w-1/2 flex justify-center lg:justify-start"
         >
-          <div className="p-4">
+          <div className="p-4 pl-[px]">
             <img
               src={saheerimg}
               alt="Profile"
-              className="w-full max-w-md h-90 sm:max-w-lg lg:max-w-xl rounded-2xl object-cover border-4 border-red-600 shadow-2xl hover:scale-105 transition-transform duration-500 ease-in-out"
+              className=" w-full max-w-md h-90 sm:max-w-lg lg:max-w-xl rounded-2xl object-cover border-4 border-red-600 shadow-2xl hover:scale-105 transition-transform duration-500 ease-in-out"
             />
           </div>
         </motion.div>
