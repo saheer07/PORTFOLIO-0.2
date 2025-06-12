@@ -3,8 +3,7 @@ import { motion } from 'framer-motion';
 import { FaPython } from "react-icons/fa";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-
-import 'aos/dist/aos.css';
+import saheerimg from "../assets/saheer.png";
 
 const containerVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -31,15 +30,15 @@ const itemVariant = {
 
 function Home() {
   useEffect(() => {
-      AOS.init({
-        duration: 1200,
-        easing: 'ease-in-out',
-        once: true,
-      });
-    }, []);
+    AOS.init({
+      duration: 1200,
+      easing: 'ease-in-out',
+      once: true,
+    });
+  }, []);
+
   return (
-    <section 
-    className="min-h-screen py-20 px-4 bg-gray-950 text-white" id="home" >
+    <section className="min-h-screen py-20 px-4 bg-gray-950 text-white" id="home">
       <motion.div
         variants={containerVariant}
         initial="hidden"
@@ -53,11 +52,13 @@ function Home() {
           variants={itemVariant}
           className="w-full lg:w-1/2 flex justify-center lg:justify-start"
         >
-          <img
-            src="https://saheer07.github.io/PORTFOLIO/my.img.JPG"
-            alt="Profile"
-            className="w-40 h-40 sm:w-52 sm:h-52 lg:w-72 lg:h-72 rounded-full object-cover border-4 border-red-600 shadow-xl hover:scale-110 transition-transform duration-500 ease-in-out"
-          />
+          <div className="p-4">
+            <img
+              src={saheerimg}
+              alt="Profile"
+              className="w-full max-w-md h-90 sm:max-w-lg lg:max-w-xl rounded-2xl object-cover border-4 border-red-600 shadow-2xl hover:scale-105 transition-transform duration-500 ease-in-out"
+            />
+          </div>
         </motion.div>
 
         {/* Text Section */}
