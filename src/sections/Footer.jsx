@@ -224,7 +224,7 @@ function Footer() {
             transition={{ type: "spring", stiffness: 200 }}
             onMouseEnter={playHoverSound}
           >
-            <Mail size={18} className="text-red-500" /> saheer@example.com
+            <Mail size={18} className="text-red-500" /> saheerchungarh07@gmail.com
           </motion.p>
           <motion.p
             className="text-sm text-gray-400 flex items-center gap-2"
@@ -232,7 +232,7 @@ function Footer() {
             transition={{ type: "spring", stiffness: 200 }}
             onMouseEnter={playHoverSound}
           >
-            <Phone size={18} className="text-red-500" /> +91 98765 43210
+            <Phone size={18} className="text-red-500" /> +91 70344 49577
           </motion.p>
         </motion.div>
 
