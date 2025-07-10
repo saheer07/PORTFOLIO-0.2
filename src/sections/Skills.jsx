@@ -7,7 +7,7 @@ import {
   FaGitAlt,
   FaNodeJs,
 } from 'react-icons/fa';
-import { SiTailwindcss, SiRedux, SiExpress } from 'react-icons/si';
+import { SiTailwindcss, SiRedux, SiExpress, SiPython } from 'react-icons/si';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
@@ -54,7 +54,12 @@ const skillData = {
     }
   ],
   backend: [
-    // Add backend skills here if needed
+  {
+     name: 'Python', 
+      icon: SiPython, 
+      about: "Python is a high-level, interpreted, general-purpose programming language known for its simplicity and readability. It supports multiple programming paradigms including procedural, object-oriented, and functional programming. Python's syntax allows developers to express concepts in fewer lines of code, making it ideal for beginners as well as professionals.", 
+      level: 60 
+  }
   ],
   tools: [
     { name: 'Git', icon: FaGitAlt, about: 'Version control system to manage and track code changes.', level: 80 },
