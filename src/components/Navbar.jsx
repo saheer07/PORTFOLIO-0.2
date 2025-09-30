@@ -26,8 +26,6 @@ const Navbar = () => {
 
   const navRef = useRef(null);
   const prevScrollY = useRef(0);
-  const firstMenuItemRef = useRef(null);
-  const lastMenuItemRef = useRef(null);
 
   const navItems = [
     { label: 'Home', href: '#home', icon: Home },
@@ -50,16 +48,15 @@ const Navbar = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 10);
 
-      if (!isOpen) {
-        if (currentScrollY < 100) setShowNavbar(true);
-        else setShowNavbar(prevScrollY.current > currentScrollY);
-      }
+      if (currentScrollY < 100) setShowNavbar(true);
+      else setShowNavbar(prevScrollY.current > currentScrollY);
+
       prevScrollY.current = currentScrollY;
       setShowScrollTop(currentScrollY > 300);
 
       const sections = document.querySelectorAll('section[id]');
       sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 100;
+        const sectionTop = section.offsetTop - 120;
         const sectionHeight = section.offsetHeight;
         if (currentScrollY >= sectionTop && currentScrollY < sectionTop + sectionHeight) {
           setActiveLink(section.getAttribute('id'));
@@ -70,7 +67,7 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isOpen]);
+  }, []);
 
   // Click outside mobile menu to close
   useEffect(() => {
@@ -81,34 +78,12 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Keyboard navigation + theme toggle shortcut
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsOpen(false);
-      if (e.key === 't' && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        setIsDarkMode(!isDarkMode);
-      }
-      if (isOpen && e.key === 'Tab') {
-        if (document.activeElement === lastMenuItemRef.current && !e.shiftKey) {
-          e.preventDefault();
-          firstMenuItemRef.current?.focus();
-        }
-        if (document.activeElement === firstMenuItemRef.current && e.shiftKey) {
-          e.preventDefault();
-          lastMenuItemRef.current?.focus();
-        }
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isDarkMode]);
-
-  // Dark mode body class
+  // Dark mode
   useEffect(() => {
     document.body.className = isDarkMode ? 'bg-slate-900' : 'bg-gray-50';
   }, [isDarkMode]);
 
+  // Smooth scroll handler
   const handleLinkClick = (e, href) => {
     if (href.startsWith('#')) {
       e.preventDefault();
@@ -117,8 +92,6 @@ const Navbar = () => {
       if (section) section.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href.slice(1));
       window.history.pushState(null, '', href);
-    } else {
-      setIsOpen(false);
     }
   };
 
@@ -164,6 +137,7 @@ const Navbar = () => {
         } ${isScrolled ? `${themeClasses.navbar} backdrop-blur-xl border-b shadow-2xl py-3` : `${themeClasses.navbar} backdrop-blur-md py-5`}`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          {/* Logo */}
           <div className={`flex items-center gap-3 ${themeClasses.text} font-bold text-xl select-none py-2`}>
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-2xl ring-2 ring-white/20">
@@ -201,7 +175,7 @@ const Navbar = () => {
 
             {/* Theme + social */}
             <div className="flex items-center gap-3">
-              <button onClick={toggleTheme} className={`p-3 rounded-xl ${themeClasses.button} border`} aria-label="Toggle theme">
+              <button onClick={toggleTheme} className={`p-3 rounded-xl ${themeClasses.button}`} aria-label="Toggle theme">
                 {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
               </button>
               <div className="flex gap-2">
@@ -220,7 +194,7 @@ const Navbar = () => {
             <button onClick={toggleTheme} className={`p-2 rounded-lg ${themeClasses.button}`} aria-label="Toggle theme">
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} aria-expanded={isOpen} className={`p-2 rounded-lg ${themeClasses.button}`}>
+            <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} className={`p-2 rounded-lg ${themeClasses.button}`}>
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
@@ -231,35 +205,32 @@ const Navbar = () => {
       {isOpen && (
         <>
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={() => setIsOpen(false)} />
-          <nav className={`fixed top-0 right-0 h-full w-80 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-all duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-            <div className="p-6">
-              <div className="space-y-2 mb-8">
-                {navItems.map(({ label, href, icon: Icon }, i) => (
-                  <a
-                    key={href}
-                    href={href}
-                    onClick={(e) => handleLinkClick(e, href)}
-                    ref={i === 0 ? firstMenuItemRef : i === navItems.length - 1 ? lastMenuItemRef : null}
-                    className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
-                      activeLink === href.slice(1)
-                        ? `${themeClasses.accent} bg-white/10 shadow-lg`
-                        : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
-                    }`}
-                  >
-                    <Icon size={20} />
-                    <span>{label}</span>
-                  </a>
-                ))}
-              </div>
+          <nav className={`fixed top-0 right-0 h-full w-80 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-all duration-300`}>
+            <div className="p-6 space-y-2">
+              {navItems.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={(e) => handleLinkClick(e, href)}
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                    activeLink === href.slice(1)
+                      ? `${themeClasses.accent} bg-white/10 shadow-lg`
+                      : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
+                  }`}
+                >
+                  <Icon size={20} />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
 
-              <div className="pt-6 border-t border-white/10 flex gap-3">
-                <a href="https://github.com/saheer07" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
-                  <Github size={18} /> GitHub
-                </a>
-                <a href="https://www.linkedin.com/in/saheer-chungath-23b44434a" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
-                  <Linkedin size={18} /> LinkedIn
-                </a>
-              </div>
+            <div className="pt-6 border-t border-white/10 flex gap-3">
+              <a href="https://github.com/saheer07" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
+                <Github size={18} /> GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/saheer-chungath-23b44434a" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
+                <Linkedin size={18} /> LinkedIn
+              </a>
             </div>
           </nav>
         </>
