@@ -9,13 +9,13 @@ import Footer from './sections/Footer';
 
 function App() {
   useEffect(() => {
-    // If refreshed or loaded with #contact hash, scroll to #home instead
-    if (window.location.hash === '#home') {
+    // If refreshed with any hash (#about, #contact, etc) → go back to Home
+    if (window.location.hash) {
       setTimeout(() => {
         const home = document.getElementById('home');
         if (home) {
           home.scrollIntoView({ behavior: 'smooth' });
-          history.replaceState(null, null, ' '); // remove #contact from URL
+          history.replaceState(null, null, ' '); // remove hash from URL
         }
       }, 100);
     }

@@ -1,6 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronUp, Github, Linkedin } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import {
+  Menu,
+  X,
+  ChevronUp,
+  Github,
+  Linkedin,
+  Moon,
+  Sun,
+  Zap,
+  Home,
+  User,
+  Code,
+  FolderOpen,
+  Mail,
+} from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +21,8 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const navRef = useRef(null);
   const prevScrollY = useRef(0);
@@ -15,253 +30,247 @@ const Navbar = () => {
   const lastMenuItemRef = useRef(null);
 
   const navItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Home', href: '#home', icon: Home },
+    { label: 'About', href: '#about', icon: User },
+    { label: 'Skills', href: '#skills', icon: Code },
+    { label: 'Projects', href: '#projects', icon: FolderOpen },
+    { label: 'Contact', href: '#contact', icon: Mail },
   ];
 
+  // Custom cursor
+  useEffect(() => {
+    const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Scroll detection + active section
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 10);
-      setShowNavbar(prevScrollY.current > currentScrollY || currentScrollY < 10);
+
+      if (!isOpen) {
+        if (currentScrollY < 100) setShowNavbar(true);
+        else setShowNavbar(prevScrollY.current > currentScrollY);
+      }
       prevScrollY.current = currentScrollY;
       setShowScrollTop(currentScrollY > 300);
+
+      const sections = document.querySelectorAll('section[id]');
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.offsetHeight;
+        if (currentScrollY >= sectionTop && currentScrollY < sectionTop + sectionHeight) {
+          setActiveLink(section.getAttribute('id'));
+        }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isOpen]);
 
+  // Click outside mobile menu to close
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
+      if (navRef.current && !navRef.current.contains(event.target)) setIsOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Keyboard navigation + theme toggle shortcut
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 't' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        setIsDarkMode(!isDarkMode);
+      }
       if (isOpen && e.key === 'Tab') {
         if (document.activeElement === lastMenuItemRef.current && !e.shiftKey) {
           e.preventDefault();
-          firstMenuItemRef.current.focus();
+          firstMenuItemRef.current?.focus();
         }
         if (document.activeElement === firstMenuItemRef.current && e.shiftKey) {
           e.preventDefault();
-          lastMenuItemRef.current.focus();
+          lastMenuItemRef.current?.focus();
         }
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, isDarkMode]);
 
+  // Dark mode body class
   useEffect(() => {
-    const handleScroll = () => {
-      navItems.forEach(({ href }) => {
-        const section = document.querySelector(href);
-        if (section) {
-          const top = section.offsetTop - 100;
-          const bottom = top + section.offsetHeight;
-          const scrollPos = window.scrollY;
-          if (scrollPos >= top && scrollPos < bottom) {
-            setActiveLink(href.slice(1));
-          }
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    document.body.className = isDarkMode ? 'bg-slate-900' : 'bg-gray-50';
+  }, [isDarkMode]);
 
   const handleLinkClick = (e, href) => {
-    e.preventDefault();
-    setIsOpen(false);
-    setTimeout(() => {
-      const target = document.querySelector(href);
-      if (target) {
-        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-      }
-    }, 300);
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      setIsOpen(false);
+      const section = document.getElementById(href.slice(1));
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+      setActiveLink(href.slice(1));
+      window.history.pushState(null, '', href);
+    } else {
+      setIsOpen(false);
+    }
   };
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setActiveLink('home');
+  };
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
+  const themeClasses = {
+    navbar: isDarkMode ? 'bg-black/20 border-white/10' : 'bg-white/20 border-black/10',
+    text: isDarkMode ? 'text-white' : 'text-gray-900',
+    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
+    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
+    hover: isDarkMode ? 'hover:text-cyan-300' : 'hover:text-blue-500',
+    mobile: isDarkMode ? 'bg-black/90 border-white/20' : 'bg-white/90 border-black/20',
+    button: isDarkMode
+      ? 'bg-cyan-500/20 border-cyan-400/30 text-cyan-300'
+      : 'bg-blue-500/20 border-blue-400/30 text-blue-600',
+  };
 
   return (
     <>
-      <motion.nav
+      {/* Custom cursor */}
+      <div
+        className="fixed pointer-events-none z-40 w-6 h-6 rounded-full transition-all duration-300 mix-blend-difference hidden lg:block"
+        style={{
+          left: mousePosition.x - 12,
+          top: mousePosition.y - 12,
+          background: isDarkMode ? 'rgba(34, 211, 238, 0.3)' : 'rgba(59, 130, 246, 0.3)',
+          boxShadow: isDarkMode
+            ? '0 0 20px rgba(34, 211, 238, 0.5)'
+            : '0 0 20px rgba(59, 130, 246, 0.5)',
+        }}
+      />
+
+      {/* Navbar */}
+      <nav
         ref={navRef}
-        initial={{ y: -100 }}
-        animate={{ y: showNavbar ? 0 : -100 }}
-        transition={{ duration: 0.3 }}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-black/70 backdrop-blur-lg shadow-lg py-2'
-            : 'bg-gray-950 shadow-none py-4'
-        }`}
+        className={`fixed top-0 w-full z-50 transition-all duration-500 transform ${
+          showNavbar ? 'translate-y-0' : '-translate-y-full'
+        } ${isScrolled ? `${themeClasses.navbar} backdrop-blur-xl border-b shadow-2xl py-3` : `${themeClasses.navbar} backdrop-blur-md py-5`}`}
       >
-        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-          {/* Logo */}
-          <a
-            href="#home"
-            onClick={(e) => handleLinkClick(e, '#home')}
-            className="flex items-center gap-2 text-white font-bold text-xl select-none py-2"
-          >
-            <div className="w-10 h-10 bg-gradient-to-tr from-red-500 to-pink-500 rounded-full flex items-center justify-center text-white font-extrabold text-lg shadow-inner ring-2 ring-white/10">
-              S
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className={`flex items-center gap-3 ${themeClasses.text} font-bold text-xl select-none py-2`}>
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-2xl ring-2 ring-white/20">
+                <Zap className="w-6 h-6 animate-pulse" />
+              </div>
             </div>
-            <span className="text-red-500 text-2xl">Saheer</span>
-          </a>
+            <div className="flex flex-col">
+              <span className={`${themeClasses.accent} text-2xl font-black tracking-tight`}>Saheer</span>
+              <span className={`${themeClasses.textMuted} text-xs font-medium tracking-widest uppercase`}>Developer</span>
+            </div>
+          </div>
 
-          {/* Desktop menu */}
-          <ul className="hidden md:flex gap-8 text-sm font-medium items-center">
-            {navItems.map(({ label, href }) => (
-              <li key={href}>
-                <a
-                  href={href}
-                  onClick={(e) => handleLinkClick(e, href)}
-                  aria-current={activeLink === href.slice(1) ? 'page' : undefined}
-                  className={`relative inline-block px-1 pb-1 transition-colors ${
-                    activeLink === href.slice(1)
-                      ? 'text-red-500'
-                      : 'text-white hover:text-red-400'
-                  }`}
-                  tabIndex={0}
-                >
-                  {label}
-                  <motion.span
-                    layoutId="underline"
-                    className="absolute left-0 bottom-0 w-full h-[2px] bg-red-500"
-                    initial={false}
-                    animate={{
-                      scaleX: activeLink === href.slice(1) ? 1 : 0,
-                    }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    style={{ originX: 0 }}
-                  />
+          {/* Desktop links */}
+          <div className="hidden lg:flex items-center gap-8">
+            <ul className="flex gap-1 bg-black/10 backdrop-blur-sm rounded-full px-2 py-2 border border-white/10">
+              {navItems.map(({ label, href, icon: Icon }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    onClick={(e) => handleLinkClick(e, href)}
+                    aria-current={activeLink === href.slice(1) ? 'page' : undefined}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${
+                      activeLink === href.slice(1)
+                        ? `${themeClasses.accent} bg-white/20 shadow-lg`
+                        : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/10`
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {label}
+                    {activeLink === href.slice(1) && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-current rounded-full animate-pulse"></div>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Theme + social */}
+            <div className="flex items-center gap-3">
+              <button onClick={toggleTheme} className={`p-3 rounded-xl ${themeClasses.button} border`} aria-label="Toggle theme">
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <div className="flex gap-2">
+                <a href="https://github.com/saheer07" target="_blank" rel="noopener noreferrer" className={`p-3 rounded-xl ${themeClasses.button} border`}>
+                  <Github size={18} />
                 </a>
-              </li>
-            ))}
+                <a href="https://www.linkedin.com/in/saheer-chungath-23b44434a" target="_blank" rel="noopener noreferrer" className={`p-3 rounded-xl ${themeClasses.button} border`}>
+                  <Linkedin size={18} />
+                </a>
+              </div>
+            </div>
+          </div>
 
-            {/* Desktop Social Icons */}
-            <li className="flex gap-4 text-white">
-              <a
-                href="https://github.com/saheer07"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-              >
-                <Github size={20} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-              >
-                <Linkedin size={20} />
-              </a>
-            </li>
-          </ul>
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden text-white">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isOpen}
-              aria-controls="mobile-menu"
-              className="focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {/* Mobile buttons */}
+          <div className="lg:hidden flex items-center gap-3">
+            <button onClick={toggleTheme} className={`p-2 rounded-lg ${themeClasses.button}`} aria-label="Toggle theme">
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} aria-expanded={isOpen} className={`p-2 rounded-lg ${themeClasses.button}`}>
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.nav
-              id="mobile-menu"
-              initial={{ x: '-100%', opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: '-100%', opacity: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed top-0 left-0 h-full w-64 bg-black bg-opacity-95 px-6 py-10 flex flex-col space-y-6 text-white shadow-xl z-50"
-            >
-              {navItems.map(({ label, href }, i) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={(e) => handleLinkClick(e, href)}
-                  ref={
-                    i === 0
-                      ? firstMenuItemRef
-                      : i === navItems.length - 1
-                      ? lastMenuItemRef
-                      : null
-                  }
-                  className={`block text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-red-500 rounded ${
-                    activeLink === href.slice(1)
-                      ? 'text-red-500'
-                      : 'hover:text-red-400'
-                  }`}
-                >
-                  {label}
-                </a>
-              ))}
+      {/* Mobile menu */}
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={() => setIsOpen(false)} />
+          <nav className={`fixed top-0 right-0 h-full w-80 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-all duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className="p-6">
+              <div className="space-y-2 mb-8">
+                {navItems.map(({ label, href, icon: Icon }, i) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => handleLinkClick(e, href)}
+                    ref={i === 0 ? firstMenuItemRef : i === navItems.length - 1 ? lastMenuItemRef : null}
+                    className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                      activeLink === href.slice(1)
+                        ? `${themeClasses.accent} bg-white/10 shadow-lg`
+                        : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span>{label}</span>
+                  </a>
+                ))}
+              </div>
 
-              {/* Mobile Social Icons */}
-              <div className="mt-auto flex gap-4 pt-6 border-t border-gray-700">
-                <a
-                  href="https://github.com/saheer07"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="text-white hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-                >
-                  <Github size={22} />
+              <div className="pt-6 border-t border-white/10 flex gap-3">
+                <a href="https://github.com/saheer07" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
+                  <Github size={18} /> GitHub
                 </a>
-                <a
-                  href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="text-white hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-                >
-                  <Linkedin size={22} />
+                <a href="https://www.linkedin.com/in/saheer-chungath-23b44434a" target="_blank" rel="noopener noreferrer" className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}>
+                  <Linkedin size={18} /> LinkedIn
                 </a>
               </div>
-            </motion.nav>
-          )}
-        </AnimatePresence>
-      </motion.nav>
+            </div>
+          </nav>
+        </>
+      )}
 
-      {/* Scroll to top button */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            onClick={scrollToTop}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed bottom-6 right-6 p-3 bg-red-500 text-white rounded-full shadow-xl z-50 hover:bg-red-600 transition"
-            aria-label="Scroll to top"
-          >
-            <ChevronUp />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Scroll to top */}
+      {showScrollTop && (
+        <button onClick={scrollToTop} className={`fixed bottom-8 right-8 p-4 ${themeClasses.button} border rounded-2xl shadow-2xl`} aria-label="Scroll to top">
+          <ChevronUp size={20} />
+        </button>
+      )}
     </>
   );
 };
