@@ -183,7 +183,7 @@ function Footer() {
 
             <div className="flex items-center gap-2">
               <MapPin className={`w-4 h-4 ${themeClasses.accent}`} />
-              <span className={`text-sm ${themeClasses.textMuted}`}>Kozhikode, Kerala</span>
+              <span className={`text-sm ${themeClasses.textMuted}`}>Malappuram, Kerala</span>
             </div>
           </motion.div>
 
