@@ -67,7 +67,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Click outside mobile menu
+  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) setIsOpen(false);
@@ -88,7 +88,6 @@ const Navbar = () => {
       const section = document.getElementById(href.slice(1));
       if (section) section.scrollIntoView({ behavior: 'smooth' });
       setActiveLink(href.slice(1));
-      // ❌ Removed window.history.pushState to prevent Contact page auto-load
     }
   };
 
@@ -148,9 +147,7 @@ const Navbar = () => {
               </div>
             </div>
             <div className="flex flex-col">
-              <span
-                className={`${themeClasses.accent} text-2xl font-black tracking-tight`}
-              >
+              <span className={`${themeClasses.accent} text-2xl font-black tracking-tight`}>
                 Saheer
               </span>
               <span
@@ -169,7 +166,6 @@ const Navbar = () => {
                   <a
                     href={href}
                     onClick={(e) => handleLinkClick(e, href)}
-                    aria-current={activeLink === href.slice(1) ? 'page' : undefined}
                     className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${
                       activeLink === href.slice(1)
                         ? `${themeClasses.accent} bg-white/20 shadow-lg`
@@ -178,9 +174,6 @@ const Navbar = () => {
                   >
                     <Icon size={16} />
                     {label}
-                    {activeLink === href.slice(1) && (
-                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-current rounded-full animate-pulse"></div>
-                    )}
                   </a>
                 </li>
               ))}
@@ -221,13 +214,11 @@ const Navbar = () => {
             <button
               onClick={toggleTheme}
               className={`p-2 rounded-lg ${themeClasses.button}`}
-              aria-label="Toggle theme"
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
               className={`p-2 rounded-lg ${themeClasses.button}`}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -236,62 +227,55 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-            onClick={() => setIsOpen(false)}
-          />
-          <nav
-            className={`fixed top-0 right-0 h-full w-80 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-all duration-300`}
-          >
-            <div className="p-6 space-y-2">
-              {navItems.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={(e) => handleLinkClick(e, href)}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
-                    activeLink === href.slice(1)
-                      ? `${themeClasses.accent} bg-white/10 shadow-lg`
-                      : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
-                  }`}
-                >
-                  <Icon size={20} />
-                  <span>{label}</span>
-                </a>
-              ))}
-            </div>
+      {/* ✅ Mobile Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-transform duration-500 ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="p-6 space-y-4">
+          {navItems.map(({ label, href, icon: Icon }) => (
+            <a
+              key={href}
+              href={href}
+              onClick={(e) => handleLinkClick(e, href)}
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                activeLink === href.slice(1)
+                  ? `${themeClasses.accent} bg-white/10 shadow-lg`
+                  : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
+              }`}
+            >
+              <Icon size={20} />
+              <span>{label}</span>
+            </a>
+          ))}
+        </div>
 
-            <div className="pt-6 border-t border-white/10 flex gap-3">
-              <a
-                href="https://github.com/saheer07"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
-              >
-                <Github size={18} /> GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
-              >
-                <Linkedin size={18} /> LinkedIn
-              </a>
-            </div>
-          </nav>
-        </>
-      )}
+        <div className="pt-6 border-t border-white/10 flex gap-3 px-4">
+          <a
+            href="https://github.com/saheer07"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
+          >
+            <Github size={18} /> GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
+          >
+            <Linkedin size={18} /> LinkedIn
+          </a>
+        </div>
+      </div>
 
       {/* Scroll to top */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
           className={`fixed bottom-8 right-8 p-4 ${themeClasses.button} border rounded-2xl shadow-2xl`}
-          aria-label="Scroll to top"
         >
           <ChevronUp size={20} />
         </button>
