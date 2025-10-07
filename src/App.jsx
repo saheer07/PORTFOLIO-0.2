@@ -9,15 +9,24 @@ import Footer from './sections/Footer';
 
 function App() {
   useEffect(() => {
-    // If refreshed with any hash (#about, #contact, etc) → go back to Home
+    // On page load or refresh, scroll to Home
+    const scrollToHome = () => {
+      const home = document.getElementById('home');
+      if (home) {
+        home.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
+    // If user refreshed from a hash (#about, #contact, etc)
     if (window.location.hash) {
       setTimeout(() => {
-        const home = document.getElementById('home');
-        if (home) {
-          home.scrollIntoView({ behavior: 'smooth' });
-          history.replaceState(null, null, ' '); // remove hash from URL
-        }
+        scrollToHome();
+        // Remove hash from URL (so it looks clean)
+        window.history.replaceState(null, '', window.location.pathname);
       }, 100);
+    } else {
+      // If no hash, just ensure Home is visible on first load
+      setTimeout(scrollToHome, 100);
     }
   }, []);
 
