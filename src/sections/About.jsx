@@ -378,7 +378,7 @@ function About() {
                 className="pt-4"
               >
                 <motion.a
-                  href="/your-resume.pdf"
+                  href="file:///C:/Users/CHUNGATH/Downloads/Saheer_c%20(1).pdf"
                   download
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
