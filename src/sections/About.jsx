@@ -1,31 +1,27 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  FaDownload, 
-  FaCode, 
-  FaLaptopCode, 
-  FaRocket, 
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FaDownload,
+  FaCode,
+  FaLaptopCode,
   FaHeart,
   FaGithub,
-  FaLinkedin 
+  FaLinkedin,
 } from "react-icons/fa";
-
-import { 
-  MapPin, 
-  Calendar, 
-  Coffee, 
-  Sparkles, 
-  Zap, 
+import {
+  MapPin,
+  Coffee,
+  Sparkles,
+  Zap,
   Target,
-  Award,
   BookOpen,
-  Users,
-  Rocket
-} from 'lucide-react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+  Rocket,
+} from "lucide-react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Swal from "sweetalert2";
 
-// Enhanced Animation Variants
+// 🔹 Animation Variants
 const containerVariant = {
   hidden: { opacity: 0 },
   visible: {
@@ -43,9 +39,9 @@ const itemVariant = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { 
-      duration: 0.6, 
-      ease: [0.6, -0.05, 0.01, 0.99] 
+    transition: {
+      duration: 0.6,
+      ease: [0.6, -0.05, 0.01, 0.99],
     },
   },
 };
@@ -57,26 +53,116 @@ const floatingVariant = {
     transition: {
       duration: 4,
       repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
+      ease: "easeInOut",
+    },
+  },
 };
 
-const pulseVariant = {
-  animate: {
-    scale: [1, 1.05, 1],
-    opacity: [0.8, 1, 0.8],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut"
+// 🔹 Download Resume with Custom Modern Confirmation
+const handleDownload = () => {
+  Swal.fire({
+    title: '<span style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem;">Download Resume?</span>',
+    html: `
+      <div style="margin: 1.5rem 0;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
+          <svg style="width: 3rem; height: 3rem; color: #06b6d4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 1rem;">
+          Get ready to download Saheer's professional resume
+        </p>
+        <div style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); padding: 0.75rem 1rem; border-radius: 0.75rem; display: inline-block;">
+          <span style="color: white; font-weight: 600; font-size: 0.9rem;">📄 Saheer_c_Resume.pdf</span>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '<span style="display: flex; align-items: center; gap: 0.5rem;"><svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Yes, Download</span>',
+    cancelButtonText: '<span style="display: flex; align-items: center; gap: 0.5rem;"><svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel</span>',
+    confirmButtonColor: '#06b6d4',
+    cancelButtonColor: '#64748b',
+    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+    backdrop: `
+      rgba(0,0,0,0.8)
+      left top
+      no-repeat
+    `,
+    customClass: {
+      popup: 'rounded-3xl shadow-2xl border border-cyan-400/20',
+      title: 'text-3xl font-bold',
+      confirmButton: 'rounded-xl px-6 py-3 font-bold shadow-lg hover:shadow-xl transition-all duration-300',
+      cancelButton: 'rounded-xl px-6 py-3 font-bold shadow-lg hover:shadow-xl transition-all duration-300',
+    },
+    showClass: {
+      popup: 'animate__animated animate__zoomIn animate__faster'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__zoomOut animate__faster'
     }
-  }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Show downloading animation
+      Swal.fire({
+        title: '<span style="background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem;">Downloading...</span>',
+        html: `
+          <div style="margin: 2rem 0;">
+            <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+              <div style="width: 4rem; height: 4rem; border: 4px solid #06b6d4; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            </div>
+            <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 1rem;">
+              Your resume is being downloaded successfully!
+            </p>
+            <div style="background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%); height: 0.5rem; border-radius: 1rem; overflow: hidden; margin: 1rem auto; max-width: 300px;">
+              <div style="width: 100%; height: 100%; background: rgba(255,255,255,0.3); animation: progress 1.5s ease-in-out;"></div>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <span style="font-size: 3rem;">✅</span>
+            </div>
+          </div>
+          <style>
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+            @keyframes progress {
+              from { transform: translateX(-100%); }
+              to { transform: translateX(0); }
+            }
+          </style>
+        `,
+        timer: 2500,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+        backdrop: `
+          rgba(0,0,0,0.8)
+          left top
+          no-repeat
+        `,
+        customClass: {
+          popup: 'rounded-3xl shadow-2xl border border-emerald-400/20',
+        },
+        showClass: {
+          popup: 'animate__animated animate__bounceIn animate__faster'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOut animate__faster'
+        }
+      });
+
+      // Actual download
+      const link = document.createElement("a");
+      link.href = "/Saheer_c (1).pdf";
+      link.download = "Saheer_c_Resume.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  });
 };
 
 function About() {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const stats = [
     { icon: BookOpen, label: "Months Learning", value: "7+" },
@@ -85,46 +171,38 @@ function About() {
     { icon: Target, label: "Skills Mastered", value: "8+" },
   ];
 
-  // Mouse tracking
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Theme detection
+  // Detect theme
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      setIsDarkMode(document.body.classList.contains('bg-slate-900'));
+      setIsDarkMode(document.body.classList.contains("bg-slate-900"));
     });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     return () => observer.disconnect();
   }, []);
 
-  // AOS initialization
+  // Initialize AOS
   useEffect(() => {
     AOS.init({
       duration: 1200,
-      easing: 'ease-in-out',
+      easing: "ease-in-out",
       once: true,
     });
   }, []);
 
   const themeClasses = {
-    bg: isDarkMode 
-      ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800' 
-      : 'bg-gradient-to-br from-gray-50 via-white to-blue-50',
-    card: isDarkMode 
-      ? 'bg-black/20 border-white/10' 
-      : 'bg-white/30 border-black/10',
-    text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
-    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-    button: isDarkMode 
-      ? 'bg-gradient-to-r from-cyan-500 to-blue-600' 
-      : 'bg-gradient-to-r from-blue-500 to-purple-600',
+    bg: isDarkMode
+      ? "bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800"
+      : "bg-gradient-to-br from-gray-50 via-white to-blue-50",
+    card: isDarkMode ? "bg-black/20 border-white/10" : "bg-white/30 border-black/10",
+    text: isDarkMode ? "text-white" : "text-gray-900",
+    textMuted: isDarkMode ? "text-gray-300" : "text-gray-600",
+    accent: isDarkMode ? "text-cyan-400" : "text-blue-600",
+    button: isDarkMode
+      ? "bg-gradient-to-r from-cyan-500 to-blue-600"
+      : "bg-gradient-to-r from-blue-500 to-purple-600",
   };
 
   return (
@@ -132,13 +210,14 @@ function About() {
       id="about"
       className={`min-h-screen py-24 px-4 relative overflow-hidden ${themeClasses.bg}`}
     >
-      {/* Animated Background Elements */}
+      {/* Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating Particles */}
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-2 h-2 rounded-full ${isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'}`}
+            className={`absolute w-2 h-2 rounded-full ${
+              isDarkMode ? "bg-cyan-400/20" : "bg-blue-400/20"
+            }`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -152,28 +231,13 @@ function About() {
               duration: 4 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           />
         ))}
-
-        {/* Gradient Orbs */}
-        <motion.div 
-          className={`absolute top-32 right-32 w-80 h-80 rounded-full opacity-10 blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-purple-500' : 'bg-gradient-to-r from-blue-400 to-pink-500'
-          }`}
-          animate={{
-            scale: [1, 1.3, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
       </div>
 
+      {/* Main Container */}
       <motion.div
         variants={containerVariant}
         initial="hidden"
@@ -182,18 +246,13 @@ function About() {
         className="max-w-7xl mx-auto relative z-10"
         data-aos="fade-up"
       >
-        {/* Section Header */}
-        <motion.div
-          variants={itemVariant}
-          className="text-center mb-16"
-          data-aos="fade-down"
-        >
-          <motion.div
-            className="inline-flex items-center gap-3 mb-6"
-            whileHover={{ scale: 1.05 }}
-          >
+        {/* Header */}
+        <motion.div variants={itemVariant} className="text-center mb-16">
+          <motion.div className="inline-flex items-center gap-3 mb-6">
             <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
-            <h1 className={`text-5xl lg:text-6xl font-black tracking-tight ${themeClasses.text}`}>
+            <h1
+              className={`text-5xl lg:text-6xl font-black tracking-tight ${themeClasses.text}`}
+            >
               About <span className={themeClasses.accent}>Me</span>
             </h1>
             <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
@@ -203,77 +262,32 @@ function About() {
           </p>
         </motion.div>
 
-        {/* Main Content */}
-        <div className={`backdrop-blur-xl ${themeClasses.card} border rounded-3xl shadow-2xl p-8 lg:p-16 relative overflow-hidden`}>
-          {/* Decorative Elements */}
-          <motion.div
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute top-6 right-6"
-          >
-            <Zap className={`w-6 h-6 ${themeClasses.accent}`} />
-          </motion.div>
-
+        {/* Content */}
+        <div
+          className={`backdrop-blur-xl ${themeClasses.card} border rounded-3xl shadow-2xl p-8 lg:p-16 relative overflow-hidden`}
+        >
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Profile Section */}
-            <motion.div
-              variants={itemVariant}
-              className="space-y-8"
-            >
-              {/* Enhanced Profile Image */}
+            <motion.div variants={itemVariant} className="space-y-8">
               <div className="flex flex-col items-center lg:items-start">
                 <motion.div
                   variants={floatingVariant}
                   animate="animate"
                   className="relative group mb-8"
                 >
-                  {/* Glowing Ring Effect */}
-                  <motion.div
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    className={`absolute -inset-6 rounded-full opacity-30 blur-lg ${
-                      isDarkMode ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600' : 'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600'
-                    }`}
-                  />
-                  
-                  <div className={`relative w-48 h-48 sm:w-56 sm:h-56 rounded-3xl overflow-hidden border-4 ${
-                    isDarkMode ? 'border-cyan-400/30' : 'border-blue-400/30'
-                  } shadow-2xl group-hover:scale-105 transition-all duration-700`}>
+                  <div
+                    className={`relative w-48 h-48 sm:w-56 sm:h-56 rounded-3xl overflow-hidden border-4 ${
+                      isDarkMode ? "border-cyan-400/30" : "border-blue-400/30"
+                    } shadow-2xl group-hover:scale-105 transition-all duration-700`}
+                  >
                     <img
                       src="https://blog.logrocket.com/wp-content/uploads/2022/01/python-developers-guide-react.png"
-                      alt="Saheer Chungath - Full Stack Developer"
+                      alt="Saheer Chungath"
                       className="w-full h-full object-cover"
-                      loading="lazy"
                     />
-                    
-                    {/* Status Overlay */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className={`absolute inset-0 ${themeClasses.card} backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center`}
-                    >
-                      <div className="text-center">
-                        <Target className={`w-8 h-8 ${themeClasses.accent} mx-auto mb-2`} />
-                        <p className={`font-bold ${themeClasses.text}`}>Ready to Code!</p>
-                      </div>
-                    </motion.div>
                   </div>
                 </motion.div>
 
-                {/* Personal Info */}
                 <div className="text-center lg:text-left space-y-4">
                   <motion.h2
                     variants={itemVariant}
@@ -281,109 +295,91 @@ function About() {
                   >
                     Saheer <span className={themeClasses.accent}>Chungath</span>
                   </motion.h2>
-                  
-                  <motion.div
-                    variants={itemVariant}
-                    className="space-y-2"
+
+                  <p
+                    className={`text-xl font-bold ${themeClasses.accent} flex items-center justify-center lg:justify-start gap-2`}
                   >
-                    <p className={`text-xl font-bold ${themeClasses.accent} flex items-center justify-center lg:justify-start gap-2`}>
-                      <FaLaptopCode className="w-5 h-5" />
-                      Full Stack Developer
-                    </p>
-                    <p className={`${themeClasses.textMuted} flex items-center justify-center lg:justify-start gap-2`}>
-                      <MapPin className="w-4 h-4" />
-                      Kerala, India
-                    </p>
-                  </motion.div>
+                    <FaLaptopCode className="w-5 h-5" />
+                    Full Stack Developer
+                  </p>
+                  <p
+                    className={`${themeClasses.textMuted} flex items-center justify-center lg:justify-start gap-2`}
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Kerala, India
+                  </p>
 
                   {/* Social Links */}
-                  <motion.div
-                    variants={itemVariant}
-                    className="flex justify-center lg:justify-start gap-4 pt-4"
-                  >
+                  <div className="flex justify-center lg:justify-start gap-4 pt-4">
                     {[
-                      { icon: FaGithub, href: "https://github.com/saheer07", label: "GitHub" },
-                      { icon: FaLinkedin, href: "https://www.linkedin.com/in/saheer-chungath-23b44434a", label: "LinkedIn" },
-                    ].map(({ icon: Icon, href, label }) => (
-                      <motion.a
-                        key={label}
+                      { icon: FaGithub, href: "https://github.com/saheer07" },
+                      {
+                        icon: FaLinkedin,
+                        href: "https://www.linkedin.com/in/saheer-chungath-23b44434a",
+                      },
+                    ].map(({ icon: Icon, href }) => (
+                      <a
+                        key={href}
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1, y: -3 }}
-                        whileTap={{ scale: 0.95 }}
                         className={`p-3 ${themeClasses.card} backdrop-blur-sm border rounded-xl ${themeClasses.text} hover:${themeClasses.accent} transition-all duration-300 group`}
-                        aria-label={label}
                       >
                         <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                      </motion.a>
+                      </a>
                     ))}
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </motion.div>
 
-            {/* Content Section */}
-            <motion.div
-              variants={itemVariant}
-              className="space-y-8"
-            >
-              {/* About Text */}
-              <div className="space-y-6">
-                <motion.div
-                  variants={itemVariant}
-                  className={`space-y-4 ${themeClasses.textMuted} text-lg leading-relaxed`}
-                >
-                  <p className="flex items-start gap-3">
-                    <FaHeart className={`w-5 h-5 mt-1 ${themeClasses.accent} flex-shrink-0`} />
-                    I'm a passionate student and aspiring full-stack developer, currently pursuing my studies while building scalable, user-centric web experiences. Always driven by curiosity and the thrill of solving complex problems.
-                  </p>
-                  <p className="flex items-start gap-3">
-                    <BookOpen className={`w-5 h-5 mt-1 ${themeClasses.accent} flex-shrink-0`} />
-                    From my early days exploring Python during my studies, I've been mastering modern web technologies using React, Django, and cutting-edge frameworks — constantly learning and growing.
-                  </p>
-                  <p className="flex items-start gap-3">
-                    <Rocket className={`w-5 h-5 mt-1 ${themeClasses.accent} flex-shrink-0`} />
-                    I've successfully completed 5+ projects that showcase my skills and dedication to clean, maintainable code. Let's build the future together, one line of code at a time.
-                  </p>
-                </motion.div>
-
-                {/* Stats */}
-                <motion.div
-                  variants={itemVariant}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  {stats.map(({ icon: Icon, label, value }, index) => (
-                    <motion.div
-                      key={label}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1 + index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      className={`${themeClasses.card} backdrop-blur-sm border rounded-2xl p-4 text-center group cursor-pointer`}
-                    >
-                      <Icon className={`w-8 h-8 ${themeClasses.accent} mx-auto mb-2 group-hover:scale-110 transition-transform`} />
-                      <div className={`text-2xl font-bold ${themeClasses.text} mb-1`}>{value}</div>
-                      <div className={`text-sm ${themeClasses.textMuted}`}>{label}</div>
-                    </motion.div>
-                  ))}
-                </motion.div>
+            {/* About Content */}
+            <motion.div variants={itemVariant} className="space-y-8">
+              <div className={`space-y-4 ${themeClasses.textMuted} text-lg leading-relaxed`}>
+                <p>
+                  <FaHeart className={`inline w-5 h-5 mr-2 ${themeClasses.accent}`} />
+                  I'm a passionate student and aspiring full-stack developer, always exploring
+                  new technologies and building innovative projects.
+                </p>
+                <p>
+                  <BookOpen className={`inline w-5 h-5 mr-2 ${themeClasses.accent}`} />
+                  Started my journey with Python and advanced to modern tools like React and
+                  Django for creating seamless web experiences.
+                </p>
+                <p>
+                  <Rocket className={`inline w-5 h-5 mr-2 ${themeClasses.accent}`} />
+                  Completed 5+ projects that demonstrate my skills and dedication to
+                  excellence.
+                </p>
               </div>
 
-
+              {/* Stats Section */}
+              <div className="grid grid-cols-2 gap-4">
+                {stats.map(({ icon: Icon, label, value }, index) => (
+                  <motion.div
+                    key={label}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className={`${themeClasses.card} backdrop-blur-sm border rounded-2xl p-4 text-center`}
+                  >
+                    <Icon
+                      className={`w-8 h-8 ${themeClasses.accent} mx-auto mb-2 transition-transform`}
+                    />
+                    <div className={`text-2xl font-bold ${themeClasses.text}`}>{value}</div>
+                    <div className={`text-sm ${themeClasses.textMuted}`}>{label}</div>
+                  </motion.div>
+                ))}
+              </div>
 
               {/* Download Resume */}
-              <motion.div
-                variants={itemVariant}
-                className="pt-4"
-              >
-                <motion.a
-                  href="/Saheer_c (1).pdf"
-                  download
+              <motion.div variants={itemVariant} className="pt-4 text-center lg:text-left">
+                <motion.button
+                  onClick={handleDownload}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className={`inline-flex items-center gap-3 ${themeClasses.button} text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 group`}
-                  aria-label="Download Resume"
                 >
                   <FaDownload className="group-hover:translate-y-[-2px] transition-transform" />
                   Download Resume
@@ -394,7 +390,7 @@ function About() {
                   >
                     ⚡
                   </motion.div>
-                </motion.a>
+                </motion.button>
               </motion.div>
             </motion.div>
           </div>

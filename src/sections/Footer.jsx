@@ -53,42 +53,20 @@ function Footer() {
     text: isDarkMode ? 'text-white' : 'text-gray-900',
     textMuted: isDarkMode ? 'text-gray-400' : 'text-gray-600',
     accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-    border: isDarkMode ? 'border-white/10' : 'border-black/10',
   };
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
   };
 
   const childVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99],
-      },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] } },
   };
 
   const socialIconVariants = {
-    hover: {
-      y: -5,
-      scale: 1.1,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 10,
-      },
-    },
+    hover: { y: -5, scale: 1.1, transition: { type: "spring", stiffness: 400, damping: 10 } },
     tap: { scale: 0.95 },
   };
 
@@ -106,39 +84,21 @@ function Footer() {
           <motion.div
             key={i}
             className={`absolute w-2 h-2 rounded-full ${isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'}`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
+            style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+            animate={{ y: [0, -30, 0], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
           />
         ))}
-
         <motion.div 
-          className={`absolute bottom-0 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-blue-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'
-          }`}
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-          }}
+          className={`absolute bottom-0 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl ${isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-blue-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 15, repeat: Infinity }}
         />
       </div>
 
       <div className="relative max-w-7xl mx-auto z-10">
-        {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
+          
           {/* Logo & About */}
           <motion.div variants={childVariants} className="space-y-6">
             <motion.a
@@ -149,9 +109,7 @@ function Footer() {
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.querySelector('#home');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
             >
               <motion.div 
@@ -161,9 +119,7 @@ function Footer() {
               >
                 S
               </motion.div>
-              <span className={`text-2xl font-black ${themeClasses.text}`}>
-                Saheer
-              </span>
+              <span className={`text-2xl font-black ${themeClasses.text}`}>Saheer</span>
             </motion.a>
 
             <TypeAnimation
@@ -190,38 +146,25 @@ function Footer() {
           {/* Quick Links */}
           <motion.nav variants={childVariants} className="space-y-4">
             <h3 className={`text-lg font-bold ${themeClasses.text} flex items-center gap-2`}>
-              <Sparkles className={`w-5 h-5 ${themeClasses.accent}`} />
-              Quick Links
+              <Sparkles className={`w-5 h-5 ${themeClasses.accent}`} /> Quick Links
             </h3>
             <ul className="space-y-3">
-              {[
-                { name: "Home", href: "#home" },
-                { name: "About", href: "#about" },
-                { name: "Skills", href: "#skills" },
-                { name: "Projects", href: "#projects" },
-                { name: "Contact", href: "#contact" }
-              ].map((section) => (
-                <motion.li
-                  key={section.name}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+              {["Home", "About", "Skills", "Projects", "Contact"].map(section => (
+                <motion.li key={section} whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 300 }}>
                   <a
-                    href={section.href}
+                    href={`#${section.toLowerCase()}`}
                     className={`text-sm ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors inline-flex items-center gap-2 group`}
                     onClick={(e) => {
                       e.preventDefault();
-                      const element = document.querySelector(section.href);
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
+                      const el = document.querySelector(`#${section.toLowerCase()}`);
+                      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }}
                   >
                     <motion.span
                       className={`w-1 h-1 rounded-full ${isDarkMode ? 'bg-cyan-400' : 'bg-blue-600'}`}
                       whileHover={{ scale: 1.5 }}
                     />
-                    {section.name}
+                    {section}
                   </a>
                 </motion.li>
               ))}
@@ -231,8 +174,7 @@ function Footer() {
           {/* Contact Info */}
           <motion.div variants={childVariants} className="space-y-4">
             <h3 className={`text-lg font-bold ${themeClasses.text} flex items-center gap-2`}>
-              <Mail className={`w-5 h-5 ${themeClasses.accent}`} />
-              Contact Info
+              <Mail className={`w-5 h-5 ${themeClasses.accent}`} /> Contact Info
             </h3>
             <div className="space-y-4">
               <motion.a
@@ -240,7 +182,7 @@ function Footer() {
                 className={`flex items-start gap-3 text-sm ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors group`}
                 whileHover={{ x: 5 }}
               >
-                <div className={`p-2 ${themeClasses.card} backdrop-blur-sm border rounded-lg mt-0.5 group-hover:scale-110 transition-transform`}>
+                <div className={`p-2 ${themeClasses.card} backdrop-blur-sm border rounded-lg group-hover:scale-110 transition-transform`}>
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
@@ -254,7 +196,7 @@ function Footer() {
                 className={`flex items-start gap-3 text-sm ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors group`}
                 whileHover={{ x: 5 }}
               >
-                <div className={`p-2 ${themeClasses.card} backdrop-blur-sm border rounded-lg mt-0.5 group-hover:scale-110 transition-transform`}>
+                <div className={`p-2 ${themeClasses.card} backdrop-blur-sm border rounded-lg group-hover:scale-110 transition-transform`}>
                   <Phone className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
@@ -268,8 +210,7 @@ function Footer() {
           {/* Social Links */}
           <motion.div variants={childVariants} className="space-y-4">
             <h3 className={`text-lg font-bold ${themeClasses.text} flex items-center gap-2`}>
-              <Heart className={`w-5 h-5 ${themeClasses.accent}`} />
-              Follow Me
+              <Heart className={`w-5 h-5 ${themeClasses.accent}`} /> Follow Me
             </h3>
             <div className="flex flex-wrap gap-3">
               {socialLinks.map(({ href, label, icon, color }) => (
@@ -284,7 +225,6 @@ function Footer() {
                   whileHover="hover"
                   whileTap="tap"
                 >
-                  {/* Hover glow effect */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                     initial={{ x: '-100%' }}
@@ -295,7 +235,6 @@ function Footer() {
                 </motion.a>
               ))}
             </div>
-
             <p className={`text-xs ${themeClasses.textMuted} mt-4`}>
               Let's connect and create something amazing together!
             </p>
@@ -309,17 +248,10 @@ function Footer() {
         />
 
         {/* Bottom Section */}
-        <motion.div
-          variants={childVariants}
-          className="flex flex-col md:flex-row items-center justify-between gap-4"
-        >
-        <p className={`text-sm ${themeClasses.textMuted} text-center`}>
-  © {new Date().getFullYear()} Saheer. All rights reserved.
-</p>
-
-          
-
-          
+        <motion.div variants={childVariants} className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className={`text-sm ${themeClasses.textMuted} text-center`}>
+            © {new Date().getFullYear()} Saheer. All rights reserved.
+          </p>
         </motion.div>
       </div>
     </motion.footer>

@@ -81,8 +81,8 @@ function Projects() {
       ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800' 
       : 'bg-gradient-to-br from-gray-50 via-white to-blue-50',
     card: isDarkMode 
-      ? 'bg-black/40 border-white/10' 
-      : 'bg-white/60 border-black/10',
+      ? 'bg-black/20 border-white/10' 
+      : 'bg-white/30 border-black/10',
     text: isDarkMode ? 'text-white' : 'text-gray-900',
     textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
     accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
@@ -93,60 +93,55 @@ function Projects() {
     visible: {
       opacity: 1,
       transition: {
+        duration: 0.8,
+        when: "beforeChildren",
         staggerChildren: 0.2,
       },
     },
   };
 
   const itemVariant = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] },
+      transition: {
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99],
+      },
     },
   };
 
   return (
     <section
       id="projects"
-      className={`min-h-screen py-24 px-6 relative overflow-hidden ${themeClasses.bg}`}
+      className={`min-h-screen py-24 px-4 relative overflow-hidden ${themeClasses.bg}`}
     >
-      {/* Animated Background */}
+      {/* Floating Background Elements - Same as About */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-2 h-2 rounded-full ${isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'}`}
+            className={`absolute w-2 h-2 rounded-full ${
+              isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'
+            }`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.6, 0.2],
+              y: [0, -40, 0],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 4 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
+              ease: "easeInOut",
             }}
           />
         ))}
-
-        <motion.div 
-          className={`absolute bottom-20 left-20 w-96 h-96 rounded-full opacity-10 blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-400 to-purple-500'
-          }`}
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 180],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-          }}
-        />
       </div>
 
       <motion.div
@@ -155,49 +150,22 @@ function Projects() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         className="max-w-7xl mx-auto relative z-10"
+        data-aos="fade-up"
       >
-        {/* Hero Introduction */}
-        <motion.div
-          variants={itemVariant}
-          className="text-center mb-20"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className={`inline-block mb-6 px-6 py-3 ${themeClasses.card} backdrop-blur-xl border rounded-full`}
-          >
-            <span className={`text-sm font-semibold tracking-wider uppercase ${themeClasses.accent}`}>
-              🚀 Featured Work
-            </span>
-          </motion.div>
-          
-          <motion.div
-            className="inline-flex items-center gap-3 mb-6"
-            whileHover={{ scale: 1.02 }}
-          >
+        {/* Header - Same style as About */}
+        <motion.div variants={itemVariant} className="text-center mb-16">
+          <motion.div className="inline-flex items-center gap-3 mb-6">
             <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
-            <h1 className={`text-5xl lg:text-6xl font-black tracking-tight ${themeClasses.text}`}>
+            <h1
+              className={`text-5xl lg:text-6xl font-black tracking-tight ${themeClasses.text}`}
+            >
               My <span className={themeClasses.accent}>Projects</span>
             </h1>
             <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
           </motion.div>
-          
-          <motion.p
-            variants={itemVariant}
-            className={`text-lg md:text-xl ${themeClasses.textMuted} max-w-2xl mx-auto`}
-          >
+          <p className={`text-xl ${themeClasses.textMuted} max-w-2xl mx-auto`}>
             Transforming ideas into interactive experiences with clean code and modern design
-          </motion.p>
-
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className={`h-1 w-24 mx-auto mt-6 rounded-full bg-gradient-to-r ${isDarkMode ? 'from-cyan-400 to-blue-600' : 'from-blue-500 to-purple-600'}`}
-          />
+          </p>
         </motion.div>
 
         {/* Projects Grid */}
@@ -220,8 +188,8 @@ function Projects() {
                 }`}
               />
 
-              {/* Main Card */}
-              <div className={`relative ${themeClasses.card} backdrop-blur-xl border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 ${
+              {/* Main Card - Matching About section style */}
+              <div className={`relative backdrop-blur-xl ${themeClasses.card} border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 ${
                 hoveredIndex === index ? 'transform -translate-y-2' : ''
               }`}>
                 {/* Image Container */}
@@ -252,7 +220,7 @@ function Projects() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <ZoomIn className="w-5 h-5 text-white" />
+                    <ZoomIn className={`w-5 h-5 ${themeClasses.accent}`} />
                   </motion.button>
 
                   {/* Tag */}
@@ -290,7 +258,7 @@ function Projects() {
                     </motion.div>
                   </div>
 
-                  <p className={`${themeClasses.textMuted} text-sm leading-relaxed mb-6`}>
+                  <p className={`${themeClasses.textMuted} text-base leading-relaxed mb-6`}>
                     {project.description}
                   </p>
 
@@ -299,7 +267,7 @@ function Projects() {
                     {project.tech.map((tech, idx) => (
                       <motion.span
                         key={idx}
-                        className={`flex items-center gap-2 px-3 py-2 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-xs font-medium ${themeClasses.text}`}
+                        className={`flex items-center gap-2 px-3 py-2 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-sm font-medium ${themeClasses.text}`}
                         whileHover={{ scale: 1.05, y: -2 }}
                       >
                         {tech.icon && <span className={themeClasses.accent}>{tech.icon}</span>}
@@ -314,8 +282,8 @@ function Projects() {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-5 py-3 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-sm font-semibold ${themeClasses.text} hover:scale-105 transition-all`}
-                      whileHover={{ y: -2 }}
+                      className={`flex items-center gap-2 px-5 py-3 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-sm font-semibold ${themeClasses.text} transition-all`}
+                      whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <FaGithub className="w-4 h-4" />
@@ -325,8 +293,8 @@ function Projects() {
                       href={project.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-5 py-3 bg-gradient-to-r ${project.gradient} text-white rounded-xl text-sm font-semibold hover:scale-105 transition-all shadow-lg`}
-                      whileHover={{ y: -2 }}
+                      className={`flex items-center gap-2 px-5 py-3 bg-gradient-to-r ${project.gradient} text-white rounded-xl text-sm font-semibold transition-all shadow-lg`}
+                      whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <FaExternalLinkAlt className="w-4 h-4" />
@@ -342,11 +310,11 @@ function Projects() {
         {/* Bottom CTA */}
         <motion.div
           variants={itemVariant}
-          className="text-center mt-20"
+          className="text-center mt-16"
         >
-          <div className={`inline-flex items-center gap-4 px-6 py-3 ${themeClasses.card} backdrop-blur-xl border rounded-2xl`}>
+          <div className={`inline-flex items-center gap-4 px-6 py-4 ${themeClasses.card} backdrop-blur-xl border rounded-2xl`}>
             <Code2 className={`w-5 h-5 ${themeClasses.accent}`} />
-            <span className={themeClasses.textMuted}>
+            <span className={`${themeClasses.textMuted} text-base`}>
               {projects.length} projects built with passion and precision
             </span>
           </div>
