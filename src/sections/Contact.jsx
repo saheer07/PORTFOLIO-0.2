@@ -4,7 +4,7 @@ import emailjs from 'emailjs-com';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { FiUser, FiMail, FiMessageSquare, FiSend, FiX } from 'react-icons/fi';
-import { Mail, Phone, MapPin, Zap } from 'lucide-react';
+import { Mail, Phone, MapPin, Zap, Send } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -16,7 +16,6 @@ function Contact() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const nameInputRef = useRef(null);
 
   useEffect(() => {
@@ -25,11 +24,6 @@ function Contact() {
 
   useEffect(() => {
     AOS.init({ duration: 1200, once: true });
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.body.classList.contains('bg-slate-900'));
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
   }, []);
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -47,8 +41,9 @@ function Contact() {
         icon: 'error',
         title: 'Invalid Email',
         text: 'Please enter a valid email address.',
-        background: isDarkMode ? '#1f2937' : '#fff',
-        color: isDarkMode ? '#fff' : '#000',
+        background: '#0a0a0a',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
       });
       return;
     }
@@ -71,8 +66,9 @@ function Contact() {
         icon: 'success',
         title: 'Message Sent!',
         text: 'Your message has been sent successfully.',
-        background: isDarkMode ? '#1f2937' : '#fff',
-        color: isDarkMode ? '#fff' : '#000',
+        background: '#0a0a0a',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
       });
       clearForm();
     } catch (error) {
@@ -80,28 +76,13 @@ function Contact() {
         icon: 'error',
         title: 'Send Failed',
         text: 'Failed to send message. Please try again.',
-        background: isDarkMode ? '#1f2937' : '#fff',
-        color: isDarkMode ? '#fff' : '#000',
+        background: '#0a0a0a',
+        color: '#fff',
+        confirmButtonColor: '#ef4444',
       });
     } finally {
       setLoading(false);
     }
-  };
-
-  const themeClasses = {
-    bg: isDarkMode
-      ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800'
-      : 'bg-gradient-to-br from-gray-50 via-white to-blue-50',
-    card: isDarkMode
-      ? 'bg-black/40 border-white/10'
-      : 'bg-white/60 border-black/10',
-    input: isDarkMode
-      ? 'bg-black/30 border-white/10 text-white placeholder-gray-500'
-      : 'bg-white/50 border-black/10 text-gray-900 placeholder-gray-400',
-    text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
-    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-    label: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
   };
 
   const containerVariant = {
@@ -115,25 +96,30 @@ function Contact() {
   };
 
   return (
-    <section className={`min-h-screen py-16 px-4 sm:px-6 md:px-10 relative ${themeClasses.bg}`}>
+    <section id='contact' className="min-h-screen py-24 px-4 sm:px-6 md:px-10 relative bg-black overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
+      </div>
+
       <motion.div
         variants={containerVariant}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="max-w-6xl mx-auto relative z-10"
-        id='contact'
+        className="max-w-7xl mx-auto relative z-10"
       >
         {/* Heading */}
-        <motion.div variants={itemVariant} className="text-center mb-12 sm:mb-16 md:mb-20">
-          <span className={`inline-block mb-4 px-4 py-2 text-sm font-semibold tracking-wider uppercase rounded-full ${themeClasses.card} ${themeClasses.accent}`}>
-            💬 Let's Connect
+        <motion.div variants={itemVariant} className="text-center mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold tracking-wider uppercase rounded-full bg-white/5 border border-white/10 text-red-500 mb-6">
+            <Zap className="w-4 h-4" /> Let's Connect
           </span>
-          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 ${themeClasses.text}`}>
-            Get In <span className={themeClasses.accent}>Touch</span>
+          <h1 className="text-5xl md:text-6xl font-black text-white mb-6">
+            Get In <span className="text-red-500">Touch</span>
           </h1>
-          <p className={`text-base sm:text-lg md:text-xl ${themeClasses.textMuted} max-w-2xl mx-auto`}>
-            Have a project in mind or just want to say hi? Drop me a message!
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Have a project in mind or just want to say hi? I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
           </p>
         </motion.div>
 
@@ -141,115 +127,157 @@ function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Left - Contact Info */}
           <motion.div variants={itemVariant} className="lg:col-span-2 space-y-6">
-            <div className={`${themeClasses.card} border rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-xl`}>
-              <h3 className={`text-2xl font-bold mb-6 ${themeClasses.text}`}>Contact Information</h3>
-              <div className="space-y-6 text-sm sm:text-base">
-                <div className="flex items-start gap-4">
-                  <Mail className={`w-5 h-5 ${themeClasses.accent}`} />
-                  <div>
-                    <p className={`${themeClasses.textMuted}`}>Email</p>
-                    <p className={`font-semibold ${themeClasses.text}`}>saheerchungath07@email.com</p>
-                  </div>
-                </div>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl h-full relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <div className="flex items-start gap-4">
-                  <Phone className={`w-5 h-5 ${themeClasses.accent}`} />
-                  <div>
-                    <p className={`${themeClasses.textMuted}`}>Phone</p>
-                    <p className={`font-semibold ${themeClasses.text}`}>+91 7034449577</p>
+              <h3 className="text-2xl font-bold mb-8 text-white relative z-10">Contact Information</h3>
+              <div className="space-y-8 relative z-10">
+                <a href="mailto:saheerchungath07@gmail.com" className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
+                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
+                    <Mail className="w-6 h-6" />
                   </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <MapPin className={`w-5 h-5 ${themeClasses.accent}`} />
                   <div>
-                    <p className={`${themeClasses.textMuted}`}>Location</p>
-                    <p className={`font-semibold ${themeClasses.text}`}>Malappuram, Kerala</p>
+                    <p className="text-sm text-gray-400 mb-1">Email</p>
+                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">saheerchungath07@gmail.com</p>
+                  </div>
+                </a>
+
+                <a href="tel:+917034449577" className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
+                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400 mb-1">Phone</p>
+                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">+91 7034449577</p>
+                  </div>
+                </a>
+
+                <div className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
+                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400 mb-1">Location</p>
+                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">Malappuram, Kerala</p>
                   </div>
                 </div>
               </div>
 
-              <p className={`text-xs sm:text-sm mt-8 ${themeClasses.textMuted}`}>
-                <Zap className={`inline w-4 h-4 ${themeClasses.accent} mr-1`} />
-                Tip: Press <kbd className="px-2 py-1 rounded border text-xs">Ctrl+Enter</kbd> to send
-              </p>
+              <div className="mt-10 pt-8 border-t border-white/10">
+                <div className="bg-red-500/10 rounded-2xl p-6 border border-red-500/20">
+                  <div className="flex items-center gap-3 text-red-400 mb-2">
+                    <Zap className="w-5 h-5 fill-current" />
+                    <span className="font-semibold">Quick Tip</span>
+                  </div>
+                  <p className="text-sm text-gray-400">
+                    Fill out the form and I'll get back to you within 24 hours.
+                  </p>
+                </div>
+              </div>
             </div>
           </motion.div>
 
           {/* Right - Form */}
           <motion.div variants={itemVariant} className="lg:col-span-3">
-            <div className={`${themeClasses.card} border rounded-3xl p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl`}>
-              {/* Name */}
-              <div className="mb-6">
-                <label htmlFor="name" className={`block mb-2 text-sm font-semibold ${themeClasses.label}`}>
-                  <FiUser className="inline mr-2" /> Name
-                </label>
-                <input
-                  ref={nameInputRef}
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className={`w-full p-4 rounded-xl ${themeClasses.input} border focus:ring-2 ${isDarkMode ? 'focus:ring-cyan-400' : 'focus:ring-blue-500'}`}
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-xl relative overflow-hidden">
 
-              {/* Email */}
-              <div className="mb-6">
-                <label htmlFor="email" className={`block mb-2 text-sm font-semibold ${themeClasses.label}`}>
-                  <FiMail className="inline mr-2" /> Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full p-4 rounded-xl ${themeClasses.input} border focus:ring-2 ${isDarkMode ? 'focus:ring-cyan-400' : 'focus:ring-blue-500'}`}
-                />
-              </div>
+              <div className="space-y-6 relative z-10">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium text-gray-300 ml-1">
+                      Your Name
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
+                        <FiUser className="w-5 h-5" />
+                      </div>
+                      <input
+                        ref={nameInputRef}
+                        id="name"
+                        type="text"
+                        placeholder="John Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                      />
+                    </div>
+                  </div>
 
-              {/* Message */}
-              <div className="mb-6">
-                <label htmlFor="message" className={`block mb-2 text-sm font-semibold ${themeClasses.label}`}>
-                  <FiMessageSquare className="inline mr-2" /> Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={6}
-                  placeholder="Tell me about your project..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className={`w-full p-4 rounded-xl ${themeClasses.input} border resize-none focus:ring-2 ${isDarkMode ? 'focus:ring-cyan-400' : 'focus:ring-blue-500'}`}
-                />
-              </div>
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium text-gray-300 ml-1">
+                      Your Email
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
+                        <FiMail className="w-5 h-5" />
+                      </div>
+                      <input
+                        id="email"
+                        type="email"
+                        placeholder="john@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={clearForm}
-                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold ${themeClasses.card} ${themeClasses.text} hover:scale-105 transition-all`}
-                >
-                  <FiX className="w-4 h-4" /> Clear
-                </button>
+                {/* Message */}
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-gray-300 ml-1">
+                    Your Message
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute top-4 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
+                      <FiMessageSquare className="w-5 h-5" />
+                    </div>
+                    <textarea
+                      id="message"
+                      rows={6}
+                      placeholder="Tell me about your project..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all resize-none"
+                    />
+                  </div>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={!isFormValid || loading}
-                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all ${
-                    loading || !isFormValid
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : `bg-gradient-to-r ${isDarkMode ? 'from-cyan-500 to-blue-600' : 'from-blue-500 to-purple-600'} hover:scale-105 shadow-lg`
-                  }`}
-                >
-                  <FiSend className="w-4 h-4" />
-                  {loading ? 'Sending...' : 'Send Message'}
-                </button>
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={clearForm}
+                    className="px-8 py-4 rounded-xl font-semibold bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2 border border-white/10"
+                  >
+                    <FiX className="w-5 h-5" /> Clear
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!isFormValid || loading}
+                    className={`flex-1 flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] ${loading || !isFormValid
+                        ? 'bg-gray-800 cursor-not-allowed opacity-50'
+                        : 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 shadow-lg shadow-red-900/20'
+                      }`}
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Send className="w-5 h-5" />
+                        Send Message
+                      </span>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </motion.div>
         </div>
       </motion.div>

@@ -1,102 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaUser, FaGithub, FaCheckSquare, FaExternalLinkAlt } from 'react-icons/fa';
-import { SiReact, SiRedux, SiTailwindcss, SiFramer } from 'react-icons/si';
-import { Sparkles, Code2, Rocket, X, ZoomIn, ArrowUpRight } from 'lucide-react';
-import todoImage from '../assets/todo.png';
-import pageImage from '../assets/page.png';
+import { motion } from 'framer-motion';
+import { FaGithub } from 'react-icons/fa';
+import { SiReact, SiTailwindcss, SiDjango, SiPostgresql, SiRedis, SiDocker, SiVite } from 'react-icons/si';
+import { Sparkles, Code2, ExternalLink, ArrowUpRight } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function Projects() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const projects = [
     {
-      title: 'Todo App',
-      image: todoImage,
-      icon: <FaCheckSquare className="text-red-500 text-4xl" />,
-      description:
-        'A simple todo list app built with React and Redux. It allows users to add, edit, delete, and mark tasks as completed.',
-      tech: [
-        { name: 'React', icon: <SiReact /> },
-        { name: 'Redux', icon: <SiRedux /> },
-        { name: 'CSS', icon: null },
+      title: 'TenantIQ',
+      subtitle: 'Enterprise Multi-Tenant AI SaaS Platform',
+      description: 'A robust multi-tenant architecture completely decoupling core tenant management from user schemas. Features custom subdomain routing, absolute data isolation, and an advanced AI document processing pipeline with dynamic chatbot integration.',
+      tag: 'AI · SaaS',
+      gradient: 'from-red-600 to-red-900',
+      repos: [
+        { label: 'Frontend', url: 'https://github.com/saheer07/TenantIq-Frontend' },
+        { label: 'Backend', url: 'https://github.com/saheer07/TenantIq-Backend' },
       ],
-      github: 'https://github.com/saheer07/Todo-List-',
-      demo: 'https://todo-list-gamma-weld-13.vercel.app/',
-      tag: 'Web App',
-      gradient: 'from-red-500 to-pink-600',
-      accentColor: 'red',
+      tech: [
+        { name: 'Django', icon: <SiDjango /> },
+        { name: 'React', icon: <SiReact /> },
+        { name: 'PostgreSQL', icon: <SiPostgresql /> },
+        { name: 'Redis', icon: <SiRedis /> },
+        { name: 'Docker', icon: <SiDocker /> },
+      ],
     },
     {
-      title: 'Registration Page',
-      image: pageImage,
-      icon: <FaUser className="text-blue-500 text-4xl" />,
-      description:
-        'A responsive and animated portfolio site to showcase my skills, experience, and projects.',
+      title: 'E-Commerce',
+      subtitle: 'Full-Stack E-Commerce Platform',
+      description: 'A scalable storefront featuring dynamic product catalogs, an integrated shopping cart, and secure checkout processes. Built using Vite for a lightning-fast frontend and a custom backend API to seamlessly handle transactions and inventory.',
+      tag: 'Full-Stack',
+      gradient: 'from-red-500 to-orange-600',
+      repos: [
+        { label: 'Frontend', url: 'https://github.com/saheer07/e-commerce-Frontend' },
+        { label: 'Backend', url: 'https://github.com/saheer07/e-commerce-Backend' },
+      ],
       tech: [
+        { name: 'Django', icon: <SiDjango /> },
         { name: 'React', icon: <SiReact /> },
         { name: 'Tailwind CSS', icon: <SiTailwindcss /> },
-        { name: 'Framer Motion', icon: <SiFramer /> },
+        { name: 'Vite', icon: <SiVite /> },
+        { name: 'PostgreSQL', icon: <SiPostgresql /> },
       ],
-      github: 'https://github.com/saheer07/registration-page',
-      demo: 'https://registration-page-green-seven.vercel.app/',
-      tag: 'UI/UX',
-      gradient: 'from-blue-500 to-purple-600',
-      accentColor: 'blue',
     },
   ];
 
-  const openModal = (img) => {
-    setModalImage(img);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalImage('');
-  };
-
   useEffect(() => {
-    AOS.init({
-      duration: 1200,
-      easing: 'ease-in-out',
-      once: true,
-    });
-
-    // Theme detection
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.body.classList.contains('bg-slate-900'));
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
+    AOS.init({ duration: 1200, easing: 'ease-in-out', once: true });
   }, []);
-
-  const themeClasses = {
-    bg: isDarkMode 
-      ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800' 
-      : 'bg-gradient-to-br from-gray-50 via-white to-blue-50',
-    card: isDarkMode 
-      ? 'bg-black/20 border-white/10' 
-      : 'bg-white/30 border-black/10',
-    text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
-    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-  };
 
   const containerVariant = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        duration: 0.8,
-        when: "beforeChildren",
-        staggerChildren: 0.2,
-      },
+      transition: { duration: 0.8, when: 'beforeChildren', staggerChildren: 0.2 },
     },
   };
 
@@ -105,40 +65,31 @@ function Projects() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99],
-      },
+      transition: { duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] },
     },
   };
 
   return (
     <section
       id="projects"
-      className={`min-h-screen py-24 px-4 relative overflow-hidden ${themeClasses.bg}`}
+      className="min-h-screen py-24 px-4 relative overflow-hidden bg-black"
     >
-      {/* Floating Background Elements - Same as About */}
+      {/* Floating background dots — same as About section */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-2 h-2 rounded-full ${
-              isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'
-            }`}
+            className="absolute w-2 h-2 rounded-full bg-red-500/20"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
-            animate={{
-              y: [0, -40, 0],
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1],
-            }}
+            animate={{ y: [0, -40, 0], opacity: [0.2, 0.8, 0.2], scale: [1, 1.5, 1] }}
             transition={{
               duration: 4 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
           />
         ))}
@@ -152,23 +103,21 @@ function Projects() {
         className="max-w-7xl mx-auto relative z-10"
         data-aos="fade-up"
       >
-        {/* Header - Same style as About */}
+        {/* Section header */}
         <motion.div variants={itemVariant} className="text-center mb-16">
           <motion.div className="inline-flex items-center gap-3 mb-6">
-            <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
-            <h1
-              className={`text-5xl lg:text-6xl font-black tracking-tight ${themeClasses.text}`}
-            >
-              My <span className={themeClasses.accent}>Projects</span>
+            <Sparkles className="w-8 h-8 text-red-500" />
+            <h1 className="text-5xl lg:text-6xl font-black tracking-tight text-white">
+              My <span className="text-red-500">Projects</span>
             </h1>
-            <Sparkles className={`w-8 h-8 ${themeClasses.accent}`} />
+            <Sparkles className="w-8 h-8 text-red-500" />
           </motion.div>
-          <p className={`text-xl ${themeClasses.textMuted} max-w-2xl mx-auto`}>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Transforming ideas into interactive experiences with clean code and modern design
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* Project cards */}
         <motion.div
           variants={containerVariant}
           className="grid md:grid-cols-2 gap-8 lg:gap-12"
@@ -183,124 +132,79 @@ function Projects() {
             >
               {/* Glow effect */}
               <motion.div
-                className={`absolute -inset-1 bg-gradient-to-r ${project.gradient} rounded-3xl opacity-0 blur-xl transition-opacity duration-500 ${
-                  hoveredIndex === index ? 'opacity-30' : ''
-                }`}
+                className={`absolute -inset-1 bg-gradient-to-r ${project.gradient} rounded-3xl blur-xl transition-opacity duration-500`}
+                animate={{ opacity: hoveredIndex === index ? 0.3 : 0 }}
               />
 
-              {/* Main Card - Matching About section style */}
-              <div className={`relative backdrop-blur-xl ${themeClasses.card} border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 ${
-                hoveredIndex === index ? 'transform -translate-y-2' : ''
-              }`}>
-                {/* Image Container */}
-                <div className="relative overflow-hidden group/image">
-                  <motion.img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-64 object-cover transition-transform duration-700"
-                    style={{
-                      transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)',
-                    }}
-                  />
-                  
-                  {/* Image Overlay */}
-                  <motion.div
-                    className={`absolute inset-0 bg-gradient-to-t ${
-                      isDarkMode ? 'from-black/80 via-black/40 to-transparent' : 'from-gray-900/80 via-gray-900/40 to-transparent'
-                    }`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredIndex === index ? 1 : 0.3 }}
-                    transition={{ duration: 0.3 }}
-                  />
+              {/* Card */}
+              <div
+                className={`relative h-full backdrop-blur-xl bg-white/5 border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 ${hoveredIndex === index
+                    ? '-translate-y-2 border-red-500/30'
+                    : 'border-white/10'
+                  }`}
+              >
+                <div className="p-8 flex flex-col h-full">
 
-                  {/* Zoom Icon */}
-                  <motion.button
-                    onClick={() => openModal(project.image)}
-                    className={`absolute top-4 right-4 p-3 ${themeClasses.card} backdrop-blur-xl border rounded-full opacity-0 group-hover/image:opacity-100 transition-opacity`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <ZoomIn className={`w-5 h-5 ${themeClasses.accent}`} />
-                  </motion.button>
-
-                  {/* Tag */}
-                  <div className="absolute bottom-4 left-4">
-                    <span className={`px-4 py-2 bg-gradient-to-r ${project.gradient} text-white text-sm font-bold rounded-full backdrop-blur-sm`}>
+                  {/* Top row: tag + arrow */}
+                  <div className="flex items-center justify-between mb-6">
+                    <span
+                      className={`px-4 py-1.5 bg-gradient-to-r ${project.gradient} text-white text-xs font-bold rounded-full`}
+                    >
                       {project.tag}
                     </span>
-                  </div>
-
-                  {/* Project Icon */}
-                  <motion.div
-                    className="absolute top-4 left-4"
-                    animate={{
-                      rotate: hoveredIndex === index ? [0, -10, 10, -10, 0] : 0,
-                    }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className={`p-3 ${themeClasses.card} backdrop-blur-xl border rounded-2xl`}>
-                      {project.icon}
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className={`text-2xl font-bold ${themeClasses.text}`}>
-                      {project.title}
-                    </h3>
                     <motion.div
                       animate={{ rotate: hoveredIndex === index ? 45 : 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <ArrowUpRight className={`w-6 h-6 ${themeClasses.accent}`} />
+                      <ArrowUpRight className="w-5 h-5 text-red-500" />
                     </motion.div>
                   </div>
 
-                  <p className={`${themeClasses.textMuted} text-base leading-relaxed mb-6`}>
-                    {project.description}
-                  </p>
+                  {/* Title & subtitle */}
+                  <h3 className="text-3xl font-black text-white mb-1 group-hover:text-red-400 transition-colors">
+                    {project.title}
+                  </h3>
+                  <div className="mb-8">
+                    <p className="text-base font-medium text-gray-300 mb-2">{project.subtitle}</p>
+                    <p className="text-sm text-gray-400 leading-relaxed">{project.description}</p>
+                  </div>
 
-                  {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  {/* Tech stack */}
+                  <div className="flex flex-wrap gap-2 mb-8">
                     {project.tech.map((tech, idx) => (
                       <motion.span
                         key={idx}
-                        className={`flex items-center gap-2 px-3 py-2 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-sm font-medium ${themeClasses.text}`}
                         whileHover={{ scale: 1.05, y: -2 }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:border-red-500/30 transition-colors"
                       >
-                        {tech.icon && <span className={themeClasses.accent}>{tech.icon}</span>}
+                        <span className="text-red-400 text-sm">{tech.icon}</span>
                         {tech.name}
                       </motion.span>
                     ))}
                   </div>
 
-                  {/* Links */}
-                  <div className="flex gap-4">
-                    <motion.a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-5 py-3 ${themeClasses.card} backdrop-blur-sm border rounded-xl text-sm font-semibold ${themeClasses.text} transition-all`}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <FaGithub className="w-4 h-4" />
-                      Code
-                    </motion.a>
-                    <motion.a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-5 py-3 bg-gradient-to-r ${project.gradient} text-white rounded-xl text-sm font-semibold transition-all shadow-lg`}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <FaExternalLinkAlt className="w-4 h-4" />
-                      Live Demo
-                    </motion.a>
+                  {/* Push links to bottom */}
+                  <div className="flex-1" />
+
+                  {/* GitHub repo links */}
+                  <div className="flex gap-3">
+                    {project.repos.map((repo, rIdx) => (
+                      <motion.a
+                        key={rIdx}
+                        href={repo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-white hover:bg-white/10 hover:border-red-500/40 transition-all"
+                      >
+                        <FaGithub className="w-4 h-4" />
+                        {repo.label}
+                        <ExternalLink className="w-3 h-3 text-gray-500" />
+                      </motion.a>
+                    ))}
                   </div>
+
                 </div>
               </div>
             </motion.div>
@@ -308,54 +212,15 @@ function Projects() {
         </motion.div>
 
         {/* Bottom CTA */}
-        <motion.div
-          variants={itemVariant}
-          className="text-center mt-16"
-        >
-          <div className={`inline-flex items-center gap-4 px-6 py-4 ${themeClasses.card} backdrop-blur-xl border rounded-2xl`}>
-            <Code2 className={`w-5 h-5 ${themeClasses.accent}`} />
-            <span className={`${themeClasses.textMuted} text-base`}>
+        <motion.div variants={itemVariant} className="text-center mt-16">
+          <div className="inline-flex items-center gap-4 px-6 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl">
+            <Code2 className="w-5 h-5 text-red-500" />
+            <span className="text-gray-400 text-base">
               {projects.length} projects built with passion and precision
             </span>
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Enhanced Modal */}
-      <AnimatePresence>
-        {modalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-50 p-4"
-            onClick={closeModal}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25 }}
-              className="relative max-w-6xl w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={modalImage}
-                alt="Full project"
-                className="w-full rounded-2xl shadow-2xl"
-              />
-              <motion.button
-                onClick={closeModal}
-                className="absolute -top-4 -right-4 p-3 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <X className="w-6 h-6" />
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

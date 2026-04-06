@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaPython, FaReact, FaJs, FaGithub, FaLinkedin, FaDownload, FaCode, FaRocket, FaHeart } from "react-icons/fa";
-import { SiDjango, SiPostgresql, SiMongodb } from "react-icons/si";
+import { FaPython, FaReact, FaJs, FaGithub, FaLinkedin, FaRocket } from "react-icons/fa";
+import { SiDjango, SiPostgresql } from "react-icons/si";
 import { ChevronDown, Sparkles, Zap, Coffee, MousePointer } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -26,9 +26,9 @@ const itemVariant = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { 
-      duration: 0.6, 
-      ease: [0.6, -0.05, 0.01, 0.99] 
+    transition: {
+      duration: 0.6,
+      ease: [0.6, -0.05, 0.01, 0.99]
     },
   },
 };
@@ -57,29 +57,16 @@ const sparkleVariant = {
   }
 };
 
-const pulseVariant = {
-  animate: {
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
-};
-
 function Home() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isTyping, setIsTyping] = useState(true);
 
   const techStack = [
-    { icon: FaPython, name: "Python", color: "from-yellow-400 to-blue-500" },
-    { icon: FaReact, name: "React", color: "from-blue-400 to-cyan-500" },
-    { icon: SiDjango, name: "Django", color: "from-green-500 to-green-600" },
-    { icon: FaJs, name: "JavaScript", color: "from-yellow-300 to-yellow-500" },
-    { icon: SiPostgresql, name: "PostgreSQL", color: "from-blue-600 to-blue-700" },
-   
+    { icon: FaPython, name: "Python", color: "from-red-500 to-red-600" },
+    { icon: FaReact, name: "React", color: "from-red-400 to-red-500" },
+    { icon: SiDjango, name: "Django", color: "from-red-600 to-red-700" },
+    { icon: FaJs, name: "JavaScript", color: "from-red-300 to-red-400" },
+    { icon: SiPostgresql, name: "PostgreSQL", color: "from-red-500 to-red-600" },
   ];
 
   // Mouse tracking for interactive elements
@@ -89,15 +76,6 @@ function Home() {
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Theme detection from body class
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.body.classList.contains('bg-slate-900'));
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
   }, []);
 
   // AOS initialization
@@ -117,33 +95,15 @@ function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const themeClasses = {
-    bg: isDarkMode 
-      ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800' 
-      : 'bg-gradient-to-br from-gray-50 via-white to-blue-50',
-    card: isDarkMode 
-      ? 'bg-black/20 border-white/10' 
-      : 'bg-white/30 border-black/10',
-    text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
-    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-    button: isDarkMode 
-      ? 'bg-gradient-to-r from-cyan-500 to-blue-600' 
-      : 'bg-gradient-to-r from-blue-500 to-purple-600',
-    buttonSecondary: isDarkMode 
-      ? 'border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/10' 
-      : 'border-blue-500/50 text-blue-600 hover:bg-blue-500/10',
-  };
-
   return (
-    <section className={`min-h-screen py-24 px-4 relative overflow-hidden ${themeClasses.bg}`}id="home">
+    <section className="min-h-screen py-24 px-4 relative overflow-hidden bg-black" id="home">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Floating Particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className={`absolute w-2 h-2 rounded-full ${isDarkMode ? 'bg-cyan-400/20' : 'bg-blue-400/20'}`}
+            className="absolute w-2 h-2 rounded-full bg-red-500/20"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -163,10 +123,8 @@ function Home() {
         ))}
 
         {/* Gradient Orbs */}
-        <motion.div 
-          className={`absolute top-20 right-20 w-96 h-96 rounded-full opacity-10 blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-r from-cyan-400 to-blue-500' : 'bg-gradient-to-r from-blue-400 to-purple-500'
-          }`}
+        <motion.div
+          className="absolute top-20 right-20 w-96 h-96 rounded-full opacity-10 blur-3xl bg-gradient-to-r from-red-600 to-red-900"
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 180, 360],
@@ -177,10 +135,8 @@ function Home() {
             ease: "linear"
           }}
         />
-        <motion.div 
-          className={`absolute bottom-20 left-20 w-80 h-80 rounded-full opacity-10 blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-r from-purple-400 to-pink-500' : 'bg-gradient-to-r from-pink-400 to-orange-500'
-          }`}
+        <motion.div
+          className="absolute bottom-20 left-20 w-80 h-80 rounded-full opacity-10 blur-3xl bg-gradient-to-r from-red-800 to-red-500"
           animate={{
             scale: [1.2, 1, 1.2],
             rotate: [360, 180, 0],
@@ -195,9 +151,7 @@ function Home() {
 
       {/* Interactive Cursor Effect */}
       <motion.div
-        className={`fixed pointer-events-none z-30 w-8 h-8 rounded-full mix-blend-difference ${
-          isDarkMode ? 'bg-cyan-300/30' : 'bg-blue-500/30'
-        }`}
+        className="fixed pointer-events-none z-30 w-8 h-8 rounded-full mix-blend-screen bg-red-500/30"
         style={{
           left: mousePosition.x - 16,
           top: mousePosition.y - 16,
@@ -219,14 +173,14 @@ function Home() {
         className="min-h-[90vh] max-w-7xl mx-auto relative z-10"
         data-aos="fade-up"
       >
-        <div className={`backdrop-blur-xl ${themeClasses.card} border rounded-3xl shadow-2xl p-8 lg:p-16 relative overflow-hidden`}>
+        <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8 lg:p-16 relative overflow-hidden">
           {/* Decorative Elements */}
           <motion.div
             variants={sparkleVariant}
             animate="animate"
             className="absolute top-6 right-6"
           >
-            <Sparkles className={`w-6 h-6 ${themeClasses.accent}`} />
+            <Sparkles className="w-6 h-6 text-red-500" />
           </motion.div>
           <motion.div
             variants={sparkleVariant}
@@ -234,7 +188,7 @@ function Home() {
             className="absolute bottom-6 left-6"
             style={{ animationDelay: '1s' }}
           >
-            <Zap className={`w-5 h-5 ${themeClasses.accent}`} />
+            <Zap className="w-5 h-5 text-red-500" />
           </motion.div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
@@ -254,11 +208,9 @@ function Home() {
                     repeat: Infinity,
                     ease: "linear"
                   }}
-                  className={`absolute -inset-4 rounded-3xl opacity-20 blur-lg ${
-                    isDarkMode ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600' : 'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600'
-                  }`}
+                  className="absolute -inset-4 rounded-3xl opacity-20 blur-lg bg-gradient-to-r from-red-500 via-red-700 to-red-900"
                 />
-                
+
                 {/* Image Container */}
                 <motion.div
                   variants={floatingVariant}
@@ -268,17 +220,15 @@ function Home() {
                   <img
                     src={saheerimg}
                     alt="Saheer - Python Full Stack Developer"
-                    className={`w-full max-w-md sm:max-w-lg lg:max-w-xl h-96 rounded-3xl object-cover border-2 ${
-                      isDarkMode ? 'border-cyan-400/30' : 'border-blue-400/30'
-                    } shadow-2xl group-hover:scale-105 transition-all duration-700 ease-out`}
+                    className="w-full max-w-md sm:max-w-lg lg:max-w-xl h-96 rounded-3xl object-cover border-2 border-red-500/30 shadow-2xl group-hover:scale-105 transition-all duration-700 ease-out"
                   />
-                  
+
                   {/* Status Badge */}
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 1, type: "spring" }}
-                    className={`absolute -bottom-4 -right-4 px-4 py-2 ${themeClasses.card} backdrop-blur-xl border rounded-2xl flex items-center gap-2 shadow-xl`}
+                    className="absolute -bottom-4 -right-4 px-4 py-2 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center gap-2 shadow-xl"
                   >
                     <motion.div
                       animate={{
@@ -288,9 +238,9 @@ function Home() {
                         duration: 2,
                         repeat: Infinity,
                       }}
-                      className="w-3 h-3 bg-green-500 rounded-full"
+                      className="w-3 h-3 bg-red-500 rounded-full"
                     />
-                    <span className={`text-sm font-medium ${themeClasses.text}`}>Available for work</span>
+                    <span className="text-sm font-medium text-white">Available for work</span>
                   </motion.div>
                 </motion.div>
               </div>
@@ -310,20 +260,20 @@ function Home() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
-                  className={`text-lg font-medium ${themeClasses.textMuted} flex items-center justify-center lg:justify-start gap-2`}
+                  className="text-lg font-medium text-red-400 flex items-center justify-center lg:justify-start gap-2"
                 >
                   <Coffee className="w-5 h-5" />
                   Hello, I'm
                 </motion.p>
-                
+
                 <motion.h1
                   variants={itemVariant}
-                  className={`text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight ${themeClasses.text}`}
+                  className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight text-white"
                 >
-                  <span className={themeClasses.accent}>Saheer</span>
+                  <span className="text-red-600">Saheer</span>
                   <motion.span
                     animate={{ opacity: isTyping ? 1 : 0 }}
-                    className={themeClasses.accent}
+                    className="text-red-500"
                   >
                     |
                   </motion.span>
@@ -336,22 +286,22 @@ function Home() {
                 className="space-y-4"
               >
                 <motion.div
-                  className={`inline-flex items-center gap-3 px-6 py-3 ${themeClasses.card} backdrop-blur-sm border rounded-2xl ${themeClasses.text}`}
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl text-white"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <FaPython className="text-2xl text-yellow-500" />
+                  <FaPython className="text-2xl text-red-500" />
                   <span className="text-xl font-bold">Full Stack Developer</span>
-                  <FaReact className="text-2xl text-blue-400" />
+                  <FaReact className="text-2xl text-red-400" />
                 </motion.div>
 
                 <motion.p
                   variants={itemVariant}
-                  className={`text-lg leading-relaxed ${themeClasses.textMuted} max-w-xl`}
+                  className="text-lg leading-relaxed text-gray-300 max-w-xl"
                 >
                   Crafting exceptional digital experiences with{' '}
-                  <span className={`font-semibold ${themeClasses.accent}`}>Python</span> and{' '}
-                  <span className={`font-semibold ${themeClasses.accent}`}>React</span>. 
+                  <span className="font-semibold text-red-400">Python</span> and{' '}
+                  <span className="font-semibold text-red-400">React</span>.
                   Passionate about building scalable applications that make a difference.
                 </motion.p>
               </motion.div>
@@ -368,12 +318,12 @@ function Home() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1 + index * 0.1 }}
                     whileHover={{ scale: 1.1, y: -2 }}
-                    className={`flex items-center gap-2 px-4 py-2 ${themeClasses.card} backdrop-blur-sm border rounded-xl cursor-pointer group`}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl cursor-pointer group hover:border-red-500/50"
                   >
                     <div className={`p-1 rounded-lg bg-gradient-to-r ${color}`}>
                       <Icon className="w-4 h-4 text-white" />
                     </div>
-                    <span className={`text-sm font-medium ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors`}>
+                    <span className="text-sm font-medium text-white group-hover:text-red-400 transition-colors">
                       {name}
                     </span>
                   </motion.div>
@@ -389,7 +339,7 @@ function Home() {
                   href="#projects"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`inline-flex items-center gap-2 ${themeClasses.button} text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 text-center group`}
+                  className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-red-900/30 hover:shadow-2xl hover:bg-red-700 transition-all duration-300 text-center group"
                 >
                   <FaRocket className="group-hover:translate-y-[-2px] transition-transform" />
                   Explore Projects
@@ -400,7 +350,7 @@ function Home() {
                   href="#contact"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`inline-flex items-center gap-2 border-2 ${themeClasses.buttonSecondary} backdrop-blur-sm px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 text-center group`}
+                  className="inline-flex items-center gap-2 border-2 border-red-500/30 text-red-400 hover:bg-red-500/10 backdrop-blur-sm px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 text-center group"
                 >
                   <MousePointer className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                   Let's Connect
@@ -423,7 +373,7 @@ function Home() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -3 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`p-3 ${themeClasses.card} backdrop-blur-sm border rounded-xl ${themeClasses.text} hover:${themeClasses.accent} transition-all duration-300 group`}
+                    className="p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-white hover:text-red-400 hover:border-red-500/50 transition-all duration-300 group"
                     aria-label={label}
                   >
                     <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
@@ -445,8 +395,8 @@ function Home() {
               transition={{ duration: 2, repeat: Infinity }}
               className="flex flex-col items-center gap-2"
             >
-              <span className={`text-sm ${themeClasses.textMuted}`}>Scroll to explore</span>
-              <ChevronDown className={`w-5 h-5 ${themeClasses.accent}`} />
+              <span className="text-sm text-gray-500">Scroll to explore</span>
+              <ChevronDown className="w-5 h-5 text-red-500" />
             </motion.div>
           </motion.div>
         </div>

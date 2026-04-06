@@ -33,7 +33,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="pt-16">
+      <div className="min-h-screen bg-black text-gray-100 bg-grid-pattern pt-16 selection:bg-red-500 selection:text-white">
         <Home />
         <About />
         <Skills />

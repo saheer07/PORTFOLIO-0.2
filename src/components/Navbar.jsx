@@ -5,8 +5,6 @@ import {
   ChevronUp,
   Github,
   Linkedin,
-  Moon,
-  Sun,
   Zap,
   Home,
   User,
@@ -21,7 +19,6 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const navRef = useRef(null);
@@ -76,11 +73,6 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Dark mode
-  useEffect(() => {
-    document.body.className = isDarkMode ? 'bg-slate-900' : 'bg-gray-50';
-  }, [isDarkMode]);
-
   const handleLinkClick = (e, href) => {
     if (href.startsWith('#')) {
       e.preventDefault();
@@ -96,63 +88,43 @@ const Navbar = () => {
     setActiveLink('home');
   };
 
-  const toggleTheme = () => setIsDarkMode(!isDarkMode);
-
-  const themeClasses = {
-    navbar: isDarkMode ? 'bg-black/20 border-white/10' : 'bg-white/20 border-black/10',
-    text: isDarkMode ? 'text-white' : 'text-gray-900',
-    textMuted: isDarkMode ? 'text-gray-300' : 'text-gray-600',
-    accent: isDarkMode ? 'text-cyan-400' : 'text-blue-600',
-    hover: isDarkMode ? 'hover:text-cyan-300' : 'hover:text-blue-500',
-    mobile: isDarkMode ? 'bg-black/90 border-white/20' : 'bg-white/90 border-black/20',
-    button: isDarkMode
-      ? 'bg-cyan-500/20 border-cyan-400/30 text-cyan-300'
-      : 'bg-blue-500/20 border-blue-400/30 text-blue-600',
-  };
-
   return (
     <>
-      {/* Custom cursor */}
+      {/* Custom cursor handled globally or here if specific */}
       <div
-        className="fixed pointer-events-none z-40 w-6 h-6 rounded-full transition-all duration-300 mix-blend-difference hidden lg:block"
+        className="fixed pointer-events-none z-40 w-6 h-6 rounded-full transition-all duration-300 mix-blend-screen hidden lg:block"
         style={{
           left: mousePosition.x - 12,
           top: mousePosition.y - 12,
-          background: isDarkMode ? 'rgba(34, 211, 238, 0.3)' : 'rgba(59, 130, 246, 0.3)',
-          boxShadow: isDarkMode
-            ? '0 0 20px rgba(34, 211, 238, 0.5)'
-            : '0 0 20px rgba(59, 130, 246, 0.5)',
+          background: 'rgba(239, 68, 68, 0.3)',
+          boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)',
+          border: '1px solid rgba(239, 68, 68, 0.5)'
         }}
       />
 
       {/* Navbar */}
       <nav
         ref={navRef}
-        className={`fixed top-0 w-full z-50 transition-all duration-500 transform ${
-          showNavbar ? 'translate-y-0' : '-translate-y-full'
-        } ${
-          isScrolled
-            ? `${themeClasses.navbar} backdrop-blur-xl border-b shadow-2xl py-3`
-            : `${themeClasses.navbar} backdrop-blur-md py-5`
-        }`}
+        className={`fixed top-0 w-full z-50 transition-all duration-500 transform ${showNavbar ? 'translate-y-0' : '-translate-y-full'
+          } ${isScrolled
+            ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-2xl py-3'
+            : 'bg-transparent py-5'
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
-          <div
-            className={`flex items-center gap-3 ${themeClasses.text} font-bold text-xl select-none py-2`}
-          >
-            <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-2xl ring-2 ring-white/20">
+          <div className="flex items-center gap-3 font-bold text-xl select-none py-2 text-white">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-red-900 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative w-12 h-12 bg-black border border-white/10 rounded-2xl flex items-center justify-center text-red-500 font-extrabold text-lg shadow-2xl ring-1 ring-white/10 group-hover:ring-red-500/50 transition-all">
                 <Zap className="w-6 h-6 animate-pulse" />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className={`${themeClasses.accent} text-2xl font-black tracking-tight`}>
-                Saheer
+              <span className="text-white text-2xl font-black tracking-tight group-hover:text-red-500 transition-colors">
+                Saheer<span className="text-red-500">.</span>
               </span>
-              <span
-                className={`${themeClasses.textMuted} text-xs font-medium tracking-widest uppercase`}
-              >
+              <span className="text-gray-400 text-xs font-medium tracking-widest uppercase">
                 Developer
               </span>
             </div>
@@ -160,17 +132,16 @@ const Navbar = () => {
 
           {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-8">
-            <ul className="flex gap-1 bg-black/10 backdrop-blur-sm rounded-full px-2 py-2 border border-white/10">
+            <ul className="flex gap-1 bg-white/5 backdrop-blur-sm rounded-full px-2 py-2 border border-white/10">
               {navItems.map(({ label, href, icon: Icon }) => (
                 <li key={href}>
                   <a
                     href={href}
                     onClick={(e) => handleLinkClick(e, href)}
-                    className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${
-                      activeLink === href.slice(1)
-                        ? `${themeClasses.accent} bg-white/20 shadow-lg`
-                        : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/10`
-                    }`}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${activeLink === href.slice(1)
+                        ? 'text-white bg-red-600/90 shadow-lg shadow-red-900/20'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      }`}
                   >
                     <Icon size={16} />
                     {label}
@@ -179,21 +150,14 @@ const Navbar = () => {
               ))}
             </ul>
 
-            {/* Theme + social */}
+            {/* Social */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={toggleTheme}
-                className={`p-3 rounded-xl ${themeClasses.button}`}
-                aria-label="Toggle theme"
-              >
-                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
               <div className="flex gap-2">
                 <a
                   href="https://github.com/saheer07"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`p-3 rounded-xl ${themeClasses.button} border`}
+                  className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-300"
                 >
                   <Github size={18} />
                 </a>
@@ -201,7 +165,7 @@ const Navbar = () => {
                   href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`p-3 rounded-xl ${themeClasses.button} border`}
+                  className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-300"
                 >
                   <Linkedin size={18} />
                 </a>
@@ -212,14 +176,8 @@ const Navbar = () => {
           {/* Mobile buttons */}
           <div className="lg:hidden flex items-center gap-3">
             <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-lg ${themeClasses.button}`}
-            >
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`p-2 rounded-lg ${themeClasses.button}`}
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-white"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -229,21 +187,19 @@ const Navbar = () => {
 
       {/* ✅ Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 ${themeClasses.mobile} backdrop-blur-xl border-l shadow-2xl z-50 transform transition-transform duration-500 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-full w-72 bg-black/95 border-l border-white/10 backdrop-blur-xl shadow-2xl z-50 transform transition-transform duration-500 ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 pt-24">
           {navItems.map(({ label, href, icon: Icon }) => (
             <a
               key={href}
               href={href}
               onClick={(e) => handleLinkClick(e, href)}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
-                activeLink === href.slice(1)
-                  ? `${themeClasses.accent} bg-white/10 shadow-lg`
-                  : `${themeClasses.text} ${themeClasses.hover} hover:bg-white/5`
-              }`}
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${activeLink === href.slice(1)
+                  ? 'text-white bg-red-600/20 border border-red-500/30'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
             >
               <Icon size={20} />
               <span>{label}</span>
@@ -251,12 +207,12 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="pt-6 border-t border-white/10 flex gap-3 px-4">
+        <div className="pt-6 border-t border-white/10 flex gap-3 px-4 mt-auto mb-8">
           <a
             href="https://github.com/saheer07"
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all"
           >
             <Github size={18} /> GitHub
           </a>
@@ -264,7 +220,7 @@ const Navbar = () => {
             href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl ${themeClasses.button} border`}
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all"
           >
             <Linkedin size={18} /> LinkedIn
           </a>
@@ -275,7 +231,7 @@ const Navbar = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className={`fixed bottom-8 right-8 p-4 ${themeClasses.button} border rounded-2xl shadow-2xl`}
+          className="fixed bottom-8 right-8 p-4 bg-red-600 text-white rounded-2xl shadow-lg shadow-red-900/50 hover:bg-red-700 transition-all duration-300 z-40"
         >
           <ChevronUp size={20} />
         </button>
