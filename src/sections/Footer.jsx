@@ -1,37 +1,24 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Facebook, Instagram, Github, Linkedin, Mail, Phone, MapPin, Heart, Sparkles } from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
+import React from "react";
+import { Github, Linkedin, Mail, Zap, Terminal, Power } from "lucide-react";
+import { motion } from "framer-motion";
 
 function Footer() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-
   const socialLinks = [
-    {
-      href: "https://www.facebook.com/share/19BKcvb4Uj/?mibextid=wwXIfr",
-      label: "Facebook",
-      icon: <Facebook size={22} />,
-      color: "hover:bg-blue-600",
-    },
-    {
-      href: "https://www.instagram.com/saheer07?igsh=MW16MTE2eHV5emtydw==",
-      label: "Instagram",
-      icon: <Instagram size={22} />,
-      color: "hover:bg-pink-600",
-    },
     {
       href: "https://github.com/saheer07",
       label: "GitHub",
-      icon: <Github size={22} />,
-      color: "hover:bg-gray-800",
+      icon: <Github size={18} />,
     },
     {
       href: "https://www.linkedin.com/in/saheer-chungath-23b44434a",
       label: "LinkedIn",
-      icon: <Linkedin size={22} />,
-      color: "hover:bg-blue-700",
+      icon: <Linkedin size={18} />,
     },
+    {
+      href: "mailto:saheerchungath07@gmail.com",
+      label: "Email",
+      icon: <Mail size={18} />,
+    }
   ];
 
   const containerVariants = {
@@ -44,197 +31,133 @@ function Footer() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] } },
   };
 
-  const socialIconVariants = {
-    hover: { y: -5, scale: 1.1, transition: { type: "spring", stiffness: 400, damping: 10 } },
-    tap: { scale: 0.95 },
-  };
-
   return (
     <motion.footer
-      ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
       variants={containerVariants}
-      className="relative py-20 px-6 overflow-hidden bg-black flex flex-col justify-center"
+      className="relative py-12 px-6 overflow-hidden bg-black flex flex-col justify-center border-t-2 border-[#e74c3c] font-['Orbitron']"
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 rounded-full bg-red-500/20"
-            style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-            animate={{ y: [0, -30, 0], opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
-          />
-        ))}
-        <motion.div
-          className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl bg-red-600/20"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 15, repeat: Infinity }}
-        />
-      </div>
-
       <div className="relative max-w-7xl mx-auto z-10 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
-
-          {/* Logo & About */}
-          <motion.div variants={childVariants} className="space-y-6">
+        {/* Main Grid Footer */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
+          
+          {/* Logo & Pilot Status */}
+          <motion.div variants={childVariants} className="space-y-6 flex flex-col items-center md:items-start text-center md:text-left">
             <motion.a
               href="#home"
               className="inline-flex items-center gap-3 group"
               whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.querySelector('#home');
                 element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
             >
-              <motion.div
-                className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-red-900/20"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-              >
-                S
-              </motion.div>
-              <span className="text-2xl font-black text-white">Saheer</span>
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-[#e74c3c] blur opacity-25 group-hover:opacity-100 transition duration-500"></div>
+                <div className="relative w-10 h-10 bg-black border border-[#e74c3c] flex items-center justify-center text-[#e74c3c] shadow-[0_0_15px_rgba(231,76,60,0.4)]">
+                  <Zap className="w-5 h-5 z-10" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl tracking-widest text-[#e74c3c] font-black uppercase">
+                  Saheer<span className="text-white">_C</span>
+                </span>
+              </div>
             </motion.a>
 
-            <TypeAnimation
-              sequence={[
-                "Frontend Developer passionate about creating beautiful experiences.",
-                3000,
-                "Turning ideas into elegant, responsive websites.",
-                3000,
-                "Building the future with React & modern technologies.",
-                3000,
-              ]}
-              wrapper="p"
-              speed={50}
-              repeat={Infinity}
-              className="text-gray-400 text-sm leading-relaxed min-h-[60px]"
-            />
+            <div className="bg-[#0a0a0a] border border-[#e74c3c]/30 p-4 relative overflow-hidden w-full max-w-xs shadow-[inset_0_0_10px_rgba(231,76,60,0.1)]">
+               {/* Corner marks */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#e74c3c]" />
+              <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#e74c3c]" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#e74c3c]" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#e74c3c]" />
 
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-red-500" />
-              <span className="text-sm text-gray-400">Malappuram, Kerala</span>
+              <div className="flex items-center gap-2 text-[10px] text-[#e74c3c] tracking-[0.2em] font-bold uppercase mb-2 border-b border-[#e74c3c]/20 pb-2">
+                <Power className="w-3 h-3" />
+                PILOT_STATUS
+              </div>
+              <div className="flex justify-between items-center text-xs tracking-widest text-white mt-3">
+                <span className="text-gray-500">SYS_LINK:</span>
+                <span className="text-[#2ecc71] animate-pulse">ONLINE & READY</span>
+              </div>
             </div>
           </motion.div>
 
-          {/* Quick Links */}
-          <motion.nav variants={childVariants} className="space-y-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-red-500" /> Quick Links
+          {/* Quick Nav Terminal */}
+          <motion.div variants={childVariants} className="space-y-4 flex flex-col items-center md:items-start w-full">
+            <h3 className="text-[10px] tracking-[0.3em] font-bold text-[#e74c3c] flex items-center gap-2 uppercase mb-4">
+              <Terminal className="w-4 h-4 text-[#e74c3c]" /> 
+              SYSTEM_NAV_LINK
             </h3>
-            <ul className="space-y-3">
-              {["Home", "About", "Skills", "Projects", "Contact"].map(section => (
-                <motion.li key={section} whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 300 }}>
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-3 w-full max-w-[250px]">
+              {["Home", "About", "Skills", "Projects", "Contact"].map((section, index) => (
+                <motion.li key={section} whileHover={{ x: 5 }}>
                   <a
                     href={`#${section.toLowerCase()}`}
-                    className="text-sm text-gray-400 hover:text-red-400 transition-colors inline-flex items-center gap-2 group"
+                    className="text-xs text-gray-400 hover:text-[#e74c3c] transition-colors flex items-center gap-2 group uppercase tracking-widest"
                     onClick={(e) => {
                       e.preventDefault();
                       const el = document.querySelector(`#${section.toLowerCase()}`);
                       el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }}
                   >
-                    <motion.span
-                      className="w-1 h-1 rounded-full bg-red-500"
-                      whileHover={{ scale: 1.5 }}
-                    />
+                    <span className="text-[8px] text-[#e74c3c]/50">0{index + 1}.</span>
                     {section}
                   </a>
                 </motion.li>
               ))}
             </ul>
-          </motion.nav>
-
-          {/* Contact Info */}
-          <motion.div variants={childVariants} className="space-y-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Mail className="w-5 h-5 text-red-500" /> Contact Info
-            </h3>
-            <div className="space-y-4">
-              <motion.a
-                href="mailto:saheerchungarh07@gmail.com"
-                className="flex items-start gap-3 text-sm text-gray-400 hover:text-red-400 transition-colors group"
-                whileHover={{ x: 5 }}
-              >
-                <div className="p-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg group-hover:scale-110 transition-transform group-hover:border-red-500/30">
-                  <Mail className="w-4 h-4 text-red-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-500 mb-1">Email</p>
-                  <p className="font-medium break-all text-gray-300 group-hover:text-white transition-colors">saheerchungarh07@gmail.com</p>
-                </div>
-              </motion.a>
-
-              <motion.a
-                href="tel:+917034449577"
-                className="flex items-start gap-3 text-sm text-gray-400 hover:text-red-400 transition-colors group"
-                whileHover={{ x: 5 }}
-              >
-                <div className="p-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg group-hover:scale-110 transition-transform group-hover:border-red-500/30">
-                  <Phone className="w-4 h-4 text-red-500" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-500 mb-1">Phone</p>
-                  <p className="font-medium text-gray-300 group-hover:text-white transition-colors">+91 70344 49577</p>
-                </div>
-              </motion.a>
-            </div>
           </motion.div>
 
-          {/* Social Links */}
-          <motion.div variants={childVariants} className="space-y-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-500" /> Follow Me
+          {/* External Links */}
+          <motion.div variants={childVariants} className="space-y-4 flex flex-col items-center lg:items-end w-full text-center lg:text-right">
+            <h3 className="text-[10px] tracking-[0.3em] font-bold text-[#e74c3c] flex items-center justify-center lg:justify-end gap-2 uppercase mb-4 w-full">
+               EXTERNAL_ENDPOINTS <Power className="w-4 h-4 text-[#e74c3c]" />
             </h3>
-            <div className="flex flex-wrap gap-3">
-              {socialLinks.map(({ href, label, icon, color }) => (
-                <motion.a
+            <div className="flex gap-4">
+              {socialLinks.map(({ href, label, icon }) => (
+                <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className={`p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-gray-400 hover:text-white ${color} transition-all group relative overflow-hidden`}
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
+                  className="p-3 bg-black border border-[#e74c3c]/30 text-gray-400 hover:border-[#e74c3c] hover:bg-[#e74c3c]/10 hover:text-white transition-all hover:shadow-[0_0_15px_rgba(231,76,60,0.4)]"
                 >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.6 }}
-                  />
                   {icon}
-                </motion.a>
+                </a>
               ))}
             </div>
-            <p className="text-xs text-gray-500 mt-4">
-              Let's connect and create something amazing together!
+            <p className="text-[9px] text-[#e74c3c]/70 tracking-widest uppercase mt-4 max-w-[200px] leading-relaxed">
+              Open channels for transmission and joint operations.
             </p>
           </motion.div>
+
         </div>
 
-        {/* Divider */}
+        {/* Divider Log */}
         <motion.div
           variants={childVariants}
-          className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"
-        />
-
-        {/* Bottom Section */}
-        <motion.div variants={childVariants} className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500 text-center">
-            © {new Date().getFullYear()} Saheer. All rights reserved.
-          </p>
-          <div className="flex items-center gap-1 text-sm text-gray-500">
-            Made with <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" /> using React
+          className="relative h-[1px] w-full bg-[#e74c3c]/20 mb-8"
+        >
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black px-4 text-[8px] text-[#e74c3c] tracking-[0.4em] uppercase">
+            END_OF_TRANSMISSION
           </div>
         </motion.div>
+
+        {/* Bottom Bar */}
+        <motion.div variants={childVariants} className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[10px] tracking-[0.2em] text-gray-500 uppercase">
+            © {new Date().getFullYear()} SAHEER_C. ALL RIGHTS SECURED.
+          </p>
+          <div className="flex items-center gap-2 text-[10px] tracking-[0.2em] text-gray-500 uppercase">
+            PWR_SRC: <span className="text-[#e74c3c] font-bold">REACT GUI</span>
+          </div>
+        </motion.div>
+
       </div>
     </motion.footer>
   );

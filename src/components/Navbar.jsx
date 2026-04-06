@@ -19,25 +19,17 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const navRef = useRef(null);
   const prevScrollY = useRef(0);
 
   const navItems = [
-    { label: 'Home', href: '#home', icon: Home },
-    { label: 'About', href: '#about', icon: User },
-    { label: 'Skills', href: '#skills', icon: Code },
-    { label: 'Projects', href: '#projects', icon: FolderOpen },
-    { label: 'Contact', href: '#contact', icon: Mail },
+    { label: '01. HOME', href: '#home', icon: Home },
+    { label: '02. PILOT', href: '#about', icon: User },
+    { label: '03. SPECS', href: '#skills', icon: Code },
+    { label: '04. LOGS', href: '#projects', icon: FolderOpen },
+    { label: '05. COMM', href: '#contact', icon: Mail },
   ];
-
-  // Custom cursor
-  useEffect(() => {
-    const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // Scroll detection + active section
   useEffect(() => {
@@ -90,60 +82,49 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Custom cursor handled globally or here if specific */}
-      <div
-        className="fixed pointer-events-none z-40 w-6 h-6 rounded-full transition-all duration-300 mix-blend-screen hidden lg:block"
-        style={{
-          left: mousePosition.x - 12,
-          top: mousePosition.y - 12,
-          background: 'rgba(239, 68, 68, 0.3)',
-          boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)',
-          border: '1px solid rgba(239, 68, 68, 0.5)'
-        }}
-      />
-
       {/* Navbar */}
       <nav
         ref={navRef}
-        className={`fixed top-0 w-full z-50 transition-all duration-500 transform ${showNavbar ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 w-full z-50 transition-all duration-500 transform font-['Orbitron'] ${showNavbar ? 'translate-y-0' : '-translate-y-full'
           } ${isScrolled
-            ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-2xl py-3'
+            ? 'bg-black/60 backdrop-blur-xl border-b border-[#e74c3c]/30 shadow-[0_4px_30px_rgba(231,76,60,0.1)] py-3'
             : 'bg-transparent py-5'
           }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center gap-3 font-bold text-xl select-none py-2 text-white">
+          <div className="flex items-center gap-3 font-bold select-none py-2 text-white">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-red-900 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative w-12 h-12 bg-black border border-white/10 rounded-2xl flex items-center justify-center text-red-500 font-extrabold text-lg shadow-2xl ring-1 ring-white/10 group-hover:ring-red-500/50 transition-all">
-                <Zap className="w-6 h-6 animate-pulse" />
+              <div className="absolute -inset-1 bg-[#e74c3c] rounded-sm blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative w-12 h-12 bg-black border border-[#e74c3c]/50 rounded-sm flex items-center justify-center text-[#e74c3c] font-extrabold shadow-lg overflow-hidden group-hover:border-[#e74c3c] transition-all">
+                <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(231,76,60,0.1)_2px,rgba(231,76,60,0.1)_4px)] z-0"></div>
+                <Zap className="w-5 h-5 z-10" />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-white text-2xl font-black tracking-tight group-hover:text-red-500 transition-colors">
-                Saheer<span className="text-red-500">.</span>
+              <span className="text-white text-xl tracking-widest group-hover:text-[#e74c3c] transition-colors drop-shadow-md">
+                GTR<span className="text-[#e74c3c]">_</span>PORTFOLIO
               </span>
-              <span className="text-gray-400 text-xs font-medium tracking-widest uppercase">
-                Developer
+              <span className="text-[#e74c3c]/70 text-[10px] tracking-[0.3em] uppercase mt-1 border-t border-[#e74c3c]/30 pt-0.5 inline-block">
+                Pilot: Saheer
               </span>
             </div>
           </div>
 
           {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-8">
-            <ul className="flex gap-1 bg-white/5 backdrop-blur-sm rounded-full px-2 py-2 border border-white/10">
+          <div className="hidden lg:flex items-center gap-6">
+            <ul className="flex gap-2 bg-black/40 backdrop-blur-md rounded-sm px-2 py-2 border border-[#e74c3c]/20">
               {navItems.map(({ label, href, icon: Icon }) => (
                 <li key={href}>
                   <a
                     href={href}
                     onClick={(e) => handleLinkClick(e, href)}
-                    className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${activeLink === href.slice(1)
-                        ? 'text-white bg-red-600/90 shadow-lg shadow-red-900/20'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    className={`relative flex items-center gap-2 px-3 py-1.5 rounded-sm text-[10px] uppercase tracking-widest transition-all duration-300 group ${activeLink === href.slice(1)
+                        ? 'text-white bg-[#e74c3c]/80 shadow-[0_0_15px_rgba(231,76,60,0.5)] border border-[#e74c3c]'
+                        : 'text-gray-400 border border-transparent hover:text-white hover:bg-[#e74c3c]/20 hover:border-[#e74c3c]/50'
                       }`}
                   >
-                    <Icon size={16} />
+                    <Icon size={14} className={activeLink === href.slice(1) ? "text-white" : "text-[#e74c3c]"} />
                     {label}
                   </a>
                 </li>
@@ -151,25 +132,23 @@ const Navbar = () => {
             </ul>
 
             {/* Social */}
-            <div className="flex items-center gap-3">
-              <div className="flex gap-2">
-                <a
-                  href="https://github.com/saheer07"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-300"
-                >
-                  <Github size={18} />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-300"
-                >
-                  <Linkedin size={18} />
-                </a>
-              </div>
+            <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/saheer07"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-sm bg-black/40 border border-[#e74c3c]/30 text-gray-400 hover:text-white hover:border-[#e74c3c] hover:bg-[#e74c3c]/20 hover:shadow-[0_0_10px_rgba(231,76,60,0.5)] transition-all duration-300"
+              >
+                <Github size={16} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-sm bg-black/40 border border-[#e74c3c]/30 text-gray-400 hover:text-white hover:border-[#e74c3c] hover:bg-[#e74c3c]/20 hover:shadow-[0_0_10px_rgba(231,76,60,0.5)] transition-all duration-300"
+              >
+                <Linkedin size={16} />
+              </a>
             </div>
           </div>
 
@@ -177,9 +156,9 @@ const Navbar = () => {
           <div className="lg:hidden flex items-center gap-3">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-white"
+              className="p-2 rounded-sm bg-black/50 border border-[#e74c3c]/30 text-[#e74c3c]"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -187,42 +166,44 @@ const Navbar = () => {
 
       {/* ✅ Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-black/95 border-l border-white/10 backdrop-blur-xl shadow-2xl z-50 transform transition-transform duration-500 ${isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-72 bg-[#050505]/95 border-l border-[#e74c3c]/30 backdrop-blur-xl shadow-[-10px_0_30px_rgba(231,76,60,0.1)] z-40 transform transition-transform duration-500 font-['Orbitron'] ${isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
       >
-        <div className="p-6 space-y-4 pt-24">
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(to_bottom,transparent_0px,transparent_2px,rgba(255,255,255,0.02)_2px,rgba(255,255,255,0.02)_4px)] pointer-events-none z-[-1]" />
+        
+        <div className="p-6 space-y-4 pt-24 relative z-10">
           {navItems.map(({ label, href, icon: Icon }) => (
             <a
               key={href}
               href={href}
               onClick={(e) => handleLinkClick(e, href)}
-              className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${activeLink === href.slice(1)
-                  ? 'text-white bg-red-600/20 border border-red-500/30'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              className={`flex items-center gap-4 px-4 py-3 rounded-sm text-xs tracking-widest transition-all duration-300 uppercase ${activeLink === href.slice(1)
+                  ? 'text-white bg-[#e74c3c]/30 border-l-4 border-[#e74c3c] shadow-[inset_10px_0_20px_rgba(231,76,60,0.2)]'
+                  : 'text-gray-400 hover:text-white hover:bg-[#e74c3c]/10 border-l-4 border-transparent hover:border-[#e74c3c]/50'
                 }`}
             >
-              <Icon size={20} />
+              <Icon size={16} className="text-[#e74c3c]" />
               <span>{label}</span>
             </a>
           ))}
         </div>
 
-        <div className="pt-6 border-t border-white/10 flex gap-3 px-4 mt-auto mb-8">
+        <div className="pt-6 border-t border-[#e74c3c]/20 flex gap-3 px-4 mt-auto mb-8 relative z-10">
           <a
             href="https://github.com/saheer07"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-sm bg-black/40 border border-[#e74c3c]/30 text-gray-400 text-xs tracking-wider hover:text-white hover:border-[#e74c3c] hover:bg-[#e74c3c]/20 transition-all uppercase"
           >
-            <Github size={18} /> GitHub
+            <Github size={14} /> GitHub
           </a>
           <a
             href="https://www.linkedin.com/in/saheer-chungath-23b44434a"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-sm bg-black/40 border border-[#e74c3c]/30 text-gray-400 text-xs tracking-wider hover:text-white hover:border-[#e74c3c] hover:bg-[#e74c3c]/20 transition-all uppercase"
           >
-            <Linkedin size={18} /> LinkedIn
+            <Linkedin size={14} /> LinkedIn
           </a>
         </div>
       </div>
@@ -231,9 +212,9 @@ const Navbar = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 p-4 bg-red-600 text-white rounded-2xl shadow-lg shadow-red-900/50 hover:bg-red-700 transition-all duration-300 z-40"
+          className="fixed bottom-8 right-8 p-3 bg-[#e74c3c]/20 backdrop-blur-md border border-[#e74c3c] text-white rounded-sm shadow-[0_0_15px_rgba(231,76,60,0.5)] hover:bg-[#e74c3c]/50 transition-all duration-300 z-40 group"
         >
-          <ChevronUp size={20} />
+          <ChevronUp size={24} className="group-hover:-translate-y-1 transition-transform" />
         </button>
       )}
     </>

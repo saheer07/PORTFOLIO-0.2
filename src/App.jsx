@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './sections/Home';
 import About from './sections/About';
@@ -6,10 +6,12 @@ import Skills from './sections/Skills';
 import Projects from './sections/Projects';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
+import Background from './components/Background';
 
 function App() {
+  const [launchMode, setLaunchMode] = useState(false);
+
   useEffect(() => {
-    // On page load or refresh, scroll to Home
     const scrollToHome = () => {
       const home = document.getElementById('home');
       if (home) {
@@ -17,31 +19,29 @@ function App() {
       }
     };
 
-    // If user refreshed from a hash (#about, #contact, etc)
     if (window.location.hash) {
       setTimeout(() => {
         scrollToHome();
-        // Remove hash from URL (so it looks clean)
         window.history.replaceState(null, '', window.location.pathname);
       }, 100);
     } else {
-      // If no hash, just ensure Home is visible on first load
       setTimeout(scrollToHome, 100);
     }
   }, []);
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-black text-gray-100 bg-grid-pattern pt-16 selection:bg-red-500 selection:text-white">
-        <Home />
+    <div className="relative min-h-screen text-white font-['Orbitron',_sans-serif] selection:bg-[#e74c3c] selection:text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+      <Background launchMode={launchMode} />
+      <div className="relative z-10 font-sans">
+        <Navbar />
+        <Home launchMode={launchMode} setLaunchMode={setLaunchMode} />
         <About />
         <Skills />
         <Projects />
         <Contact />
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 

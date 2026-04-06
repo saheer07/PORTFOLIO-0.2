@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import emailjs from 'emailjs-com';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { FiUser, FiMail, FiMessageSquare, FiSend, FiX } from 'react-icons/fi';
-import { Mail, Phone, MapPin, Zap, Send } from 'lucide-react';
+import { FiX } from 'react-icons/fi';
+import { Mail, Phone, MapPin, Zap, Send, Terminal, AlertCircle } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -19,10 +19,6 @@ function Contact() {
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    nameInputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
     AOS.init({ duration: 1200, once: true });
   }, []);
 
@@ -34,17 +30,32 @@ function Contact() {
     setMessage('');
   };
 
+  const showSystemAlert = (title, text, type = 'error') => {
+    const color = type === 'error' ? '#e74c3c' : '#2ecc71';
+    MySwal.fire({
+      title: `<span style="font-family: 'Orbitron', sans-serif; color: ${color}; font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;">SYS_${type.toUpperCase()}</span>`,
+      html: `
+        <div style="font-family: 'Orbitron', sans-serif; text-align: left; padding: 10px; border: 1px solid ${color}; background: rgba(${type === 'error' ? '231,76,60' : '46,204,113'},0.05);">
+          <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase;">
+            > DETAILS: <span style="color: white; font-weight: bold;">${text}</span>
+          </p>
+        </div>
+      `,
+      confirmButtonText: '<span style="font-family: \'Orbitron\', sans-serif; font-weight: bold; letter-spacing: 1px;">ACKNOWLEDGE</span>',
+      confirmButtonColor: color,
+      background: 'rgba(5,5,5,0.95)',
+      backdrop: `rgba(0,0,0,0.85)`,
+      customClass: {
+        popup: `border border-[${color}] rounded-none shadow-[0_0_30px_rgba(${type === 'error' ? '231,76,60' : '46,204,113'},0.4)] relative`,
+        confirmButton: `border border-[${color}] px-6 py-2 bg-[${color}]/20 hover:bg-[${color}]/40 rounded-none transition-all`,
+      }
+    });
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     if (!validateEmail(email)) {
-      MySwal.fire({
-        icon: 'error',
-        title: 'Invalid Email',
-        text: 'Please enter a valid email address.',
-        background: '#0a0a0a',
-        color: '#fff',
-        confirmButtonColor: '#ef4444',
-      });
+      showSystemAlert('INVALID_INPUT', 'Please enter a valid email address sequence.', 'error');
       return;
     }
 
@@ -62,24 +73,10 @@ function Contact() {
         templateParams,
         'KTj6GPbTAVS2JysnN'
       );
-      MySwal.fire({
-        icon: 'success',
-        title: 'Message Sent!',
-        text: 'Your message has been sent successfully.',
-        background: '#0a0a0a',
-        color: '#fff',
-        confirmButtonColor: '#ef4444',
-      });
+      showSystemAlert('TRANSMIT_SUCCESS', 'Message sequence transmitted successfully.', 'success');
       clearForm();
     } catch (error) {
-      MySwal.fire({
-        icon: 'error',
-        title: 'Send Failed',
-        text: 'Failed to send message. Please try again.',
-        background: '#0a0a0a',
-        color: '#fff',
-        confirmButtonColor: '#ef4444',
-      });
+      showSystemAlert('TRANSMIT_FAILED', 'Failed to transmit message sequence.', 'error');
     } finally {
       setLoading(false);
     }
@@ -96,182 +93,189 @@ function Contact() {
   };
 
   return (
-    <section id='contact' className="min-h-screen py-24 px-4 sm:px-6 md:px-10 relative bg-black overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
-      </div>
-
+    <section id='contact' className="min-h-screen py-24 px-4 sm:px-6 md:px-10 relative bg-black/50 flex items-center font-['Orbitron']">
       <motion.div
         variants={containerVariant}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="max-w-7xl mx-auto relative z-10"
+        className="max-w-7xl mx-auto relative z-10 w-full"
       >
         {/* Heading */}
-        <motion.div variants={itemVariant} className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold tracking-wider uppercase rounded-full bg-white/5 border border-white/10 text-red-500 mb-6">
-            <Zap className="w-4 h-4" /> Let's Connect
-          </span>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6">
-            Get In <span className="text-red-500">Touch</span>
+        <motion.div variants={itemVariant} className="mb-12 flex flex-col items-start border-l-4 border-[#e74c3c] pl-6 ml-4">
+          <h1 className="text-4xl lg:text-5xl font-black tracking-widest text-white uppercase shadow-sm">
+            Comm<span className="text-[#e74c3c]">-Link</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Have a project in mind or just want to say hi? I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+          <p className="text-sm text-[#e74c3c] tracking-[0.3em] uppercase mt-2">
+            Establish Secure Transmission
           </p>
         </motion.div>
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-          {/* Left - Contact Info */}
+          {/* Left - Contact Info Panel */}
           <motion.div variants={itemVariant} className="lg:col-span-2 space-y-6">
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl h-full relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="bg-[#050505]/80 border border-[#e74c3c]/30 p-8 h-full relative overflow-hidden group shadow-[inset_0_0_20px_rgba(231,76,60,0.1)]">
+              {/* Corner Accents */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[#e74c3c]" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[#e74c3c]" />
+              
+              <div className="text-[10px] text-[#e74c3c] tracking-[0.2em] font-bold uppercase mb-8 border-b border-[#e74c3c]/30 pb-2 flex items-center gap-2">
+                <Terminal className="w-4 h-4" />
+                PRIMARY_NODE_INFO
+              </div>
 
-              <h3 className="text-2xl font-bold mb-8 text-white relative z-10">Contact Information</h3>
-              <div className="space-y-8 relative z-10">
-                <a href="mailto:saheerchungath07@gmail.com" className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
-                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
-                    <Mail className="w-6 h-6" />
+              <div className="space-y-6 relative z-10">
+                <a href="mailto:saheerchungath07@gmail.com" className="flex items-start gap-4 group/item p-4 bg-black border border-[#e74c3c]/20 hover:border-[#e74c3c] transition-all">
+                  <div className="text-[#e74c3c] group-hover/item:animate-pulse">
+                    <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Email</p>
-                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">saheerchungath07@gmail.com</p>
+                    <p className="text-[9px] text-gray-500 tracking-[0.2em] mb-1 uppercase">Protocol: Email</p>
+                    <p className="text-sm font-bold text-white group-hover/item:text-[#e74c3c] transition-colors tracking-wider">saheerchungath07@gmail.com</p>
                   </div>
                 </a>
 
-                <a href="tel:+917034449577" className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
-                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
-                    <Phone className="w-6 h-6" />
+                <a href="tel:+917034449577" className="flex items-start gap-4 group/item p-4 bg-black border border-[#e74c3c]/20 hover:border-[#e74c3c] transition-all">
+                  <div className="text-[#e74c3c] group-hover/item:animate-pulse">
+                    <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Phone</p>
-                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">+91 7034449577</p>
+                    <p className="text-[9px] text-gray-500 tracking-[0.2em] mb-1 uppercase">Protocol: Voice</p>
+                    <p className="text-sm font-bold text-white group-hover/item:text-[#e74c3c] transition-colors tracking-wider">+91 7034449577</p>
                   </div>
                 </a>
 
-                <div className="flex items-start gap-5 group/item bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all hover:bg-white/10">
-                  <div className="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover/item:scale-110 transition-transform">
-                    <MapPin className="w-6 h-6" />
+                <div className="flex items-start gap-4 group/item p-4 bg-black border border-[#e74c3c]/20 hover:border-[#e74c3c] transition-all">
+                  <div className="text-[#e74c3c] group-hover/item:animate-pulse">
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Location</p>
-                    <p className="text-white font-medium group-hover/item:text-red-400 transition-colors">Malappuram, Kerala</p>
+                    <p className="text-[9px] text-gray-500 tracking-[0.2em] mb-1 uppercase">Protocol: Location</p>
+                    <p className="text-sm font-bold text-white group-hover/item:text-[#e74c3c] transition-colors tracking-wider">Malappuram, Kerala</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-10 pt-8 border-t border-white/10">
-                <div className="bg-red-500/10 rounded-2xl p-6 border border-red-500/20">
-                  <div className="flex items-center gap-3 text-red-400 mb-2">
-                    <Zap className="w-5 h-5 fill-current" />
-                    <span className="font-semibold">Quick Tip</span>
+              <div className="mt-10 pt-6 border-t border-[#e74c3c]/20">
+                <div className="bg-[#e74c3c]/5 p-4 border border-[#e74c3c]/20">
+                  <div className="flex items-center gap-2 text-[#e74c3c] mb-2 text-xs font-bold tracking-widest uppercase">
+                    <AlertCircle className="w-4 h-4" />
+                    SYSTEM_NOTICE
                   </div>
-                  <p className="text-sm text-gray-400">
-                    Fill out the form and I'll get back to you within 24 hours.
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest font-sans leading-relaxed">
+                    <span className="font-['Orbitron'] font-bold text-[#e74c3c]">{'>> '}</span>
+                    Fill out the transmission form. Response time estimated at T-minus 24 hrs.
                   </p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Right - Form */}
-          <motion.div variants={itemVariant} className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-xl relative overflow-hidden">
+          {/* Right - Form Terminal */}
+          <motion.div variants={itemVariant} className="lg:col-span-3 h-full">
+            <form onSubmit={handleSubmit} className="bg-[#0a0a0a] border border-[#e74c3c]/50 p-8 lg:p-10 relative overflow-hidden h-full flex flex-col shadow-[0_0_30px_rgba(231,76,60,0.1)]">
+              {/* Corner Accents */}
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#e74c3c]" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#e74c3c]" />
 
-              <div className="space-y-6 relative z-10">
+              <div className="text-[10px] text-[#e74c3c] tracking-[0.2em] font-bold uppercase mb-8 border-b border-[#e74c3c]/30 pb-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-4 h-4" />
+                  TRANSMISSION_TERMINAL
+                </div>
+                <div className="text-gray-600">INPUT_{isFormValid ? 'READY' : 'REQUIRED'}</div>
+              </div>
+
+              <div className="space-y-6 flex-1 flex flex-col justify-center">
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Name */}
+                  {/* Name Input */}
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-gray-300 ml-1">
-                      Your Name
+                    <label htmlFor="name" className="text-[10px] tracking-widest font-bold text-gray-400 uppercase">
+                      ID_INPUT (Name)
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
-                        <FiUser className="w-5 h-5" />
-                      </div>
                       <input
                         ref={nameInputRef}
                         id="name"
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="ENTER_IDENTIFIER..."
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                        className="w-full bg-[#111] border border-[#e74c3c]/30 p-4 text-xs text-white placeholder-gray-700 tracking-widest uppercase focus:outline-none focus:border-[#e74c3c] focus:bg-[#e74c3c]/5 transition-all"
                       />
+                      {/* Active indicator */}
+                      <div className="absolute right-0 bottom-0 top-0 w-1 bg-[#e74c3c] opacity-0 group-focus-within:opacity-100 transition-opacity" />
                     </div>
                   </div>
 
-                  {/* Email */}
+                  {/* Email Input */}
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-300 ml-1">
-                      Your Email
+                    <label htmlFor="email" className="text-[10px] tracking-widest font-bold text-gray-400 uppercase">
+                      LINK_INPUT (Email)
                     </label>
                     <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
-                        <FiMail className="w-5 h-5" />
-                      </div>
                       <input
                         id="email"
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder="ENTER_ADDRESS..."
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                        className="w-full bg-[#111] border border-[#e74c3c]/30 p-4 text-xs text-white placeholder-gray-700 tracking-widest uppercase focus:outline-none focus:border-[#e74c3c] focus:bg-[#e74c3c]/5 transition-all"
                       />
+                      {/* Active indicator */}
+                      <div className="absolute right-0 bottom-0 top-0 w-1 bg-[#e74c3c] opacity-0 group-focus-within:opacity-100 transition-opacity" />
                     </div>
                   </div>
                 </div>
 
-                {/* Message */}
+                {/* Message Input */}
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-gray-300 ml-1">
-                    Your Message
+                  <label htmlFor="message" className="text-[10px] tracking-widest font-bold text-gray-400 uppercase">
+                    DATA_PAYLOAD (Message)
                   </label>
                   <div className="relative group">
-                    <div className="absolute top-4 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-red-500 transition-colors">
-                      <FiMessageSquare className="w-5 h-5" />
-                    </div>
                     <textarea
                       id="message"
-                      rows={6}
-                      placeholder="Tell me about your project..."
+                      rows={5}
+                      placeholder="ENTER_DATA_SEQUENCE..."
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="w-full bg-black/40 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all resize-none"
+                      className="w-full bg-[#111] border border-[#e74c3c]/30 p-4 text-xs font-sans text-white placeholder-gray-700 tracking-widest focus:outline-none focus:border-[#e74c3c] focus:bg-[#e74c3c]/5 transition-all resize-none"
                     />
+                    {/* Active indicator */}
+                    <div className="absolute right-0 bottom-1 top-0 w-1 bg-[#e74c3c] opacity-0 group-focus-within:opacity-100 transition-opacity" />
                   </div>
                 </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                {/* Controls */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4 mt-auto">
                   <button
                     type="button"
                     onClick={clearForm}
-                    className="px-8 py-4 rounded-xl font-semibold bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2 border border-white/10"
+                    className="px-6 py-4 bg-[#111] text-gray-400 border border-[#e74c3c]/30 hover:border-[#e74c3c] hover:bg-[#e74c3c]/10 hover:text-white transition-all flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest"
                   >
-                    <FiX className="w-5 h-5" /> Clear
+                    <FiX className="w-4 h-4" /> PURGE
                   </button>
 
                   <button
                     type="submit"
                     disabled={!isFormValid || loading}
-                    className={`flex-1 flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] ${loading || !isFormValid
-                        ? 'bg-gray-800 cursor-not-allowed opacity-50'
-                        : 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 shadow-lg shadow-red-900/20'
-                      }`}
+                    className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-xs font-bold uppercase tracking-widest transition-all ${
+                      loading || !isFormValid
+                        ? 'bg-[#111] border border-gray-800 text-gray-600 cursor-not-allowed'
+                        : 'bg-[#e74c3c]/10 border border-[#e74c3c] text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white shadow-[0_0_15px_rgba(231,76,60,0.3)] hover:shadow-[0_0_25px_rgba(231,76,60,0.6)]'
+                    }`}
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Sending...
+                        <div className="w-4 h-4 border border-[#e74c3c] border-t-transparent animate-spin" />
+                        TRANSMITTING...
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
-                        <Send className="w-5 h-5" />
-                        Send Message
+                        <Zap className="w-4 h-4" />
+                        INITIATE TRANSMISSION
                       </span>
                     )}
                   </button>
